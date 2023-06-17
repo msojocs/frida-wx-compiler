@@ -1,6 +1,8 @@
 
 // std::vector of MSVC 120 (2013)
 
+import { StdString } from "./std_string.js"
+
 /*
 pointer _Myfirst;	// pointer to beginning of array
 pointer _Mylast;	// pointer to current end of sequence
@@ -74,4 +76,13 @@ export default class StdVector {
 		r += " }";
 		return r;
 	}
+}
+
+export const StdVectorStringParse = (p: NativePointer) => {
+	return new StdVector(p, {
+		introspectElement(p) {
+			return new StdString(p).toString() || 'empty'
+		},
+		elementSize: 24,
+	}).toString()
 }

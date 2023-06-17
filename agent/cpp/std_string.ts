@@ -16,9 +16,9 @@ size_type _Myres;	// current storage reserved for string
  * 00 00 00 00, 00 00 00 00
  * 前四个字节地址，后四个字节长度
  */
-const BUF_SIZE = 4;
+export const STD_STRING_BUF_SIZE = 4;
 
-export default class StdString {
+export class StdString {
     private addr
 	constructor(addr: NativePointer) {
 		this.addr = addr;
@@ -34,11 +34,11 @@ export default class StdString {
 	}
 
 	get size() {
-		return this.addr.add(BUF_SIZE).readPointer();
+		return this.addr.add(STD_STRING_BUF_SIZE).readPointer();
 	}
 
 	get reservedSize() {
-		return this.addr.add(BUF_SIZE).add(Process.pointerSize).readPointer();
+		return this.addr.add(STD_STRING_BUF_SIZE).add(Process.pointerSize).readPointer();
 	}
 
 	toString() {

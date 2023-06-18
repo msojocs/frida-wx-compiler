@@ -13,47 +13,68 @@ F8 CE DE 00 2B 00 00 00(key)  2B 00 00 00 0D F0 AD BA
 
 import { StdString } from "./std_string.js"
 
+interface StdMapOption {
+    inspectElement: (p: NativePointer) => string
+}
 const BUF_SIZE = 16
 export default class StdMap {
     private addr: NativePointer
-    constructor(addr: NativePointer) {
+    private options: StdMapOption
+    constructor(addr: NativePointer, options: StdMapOption) {
         console.log('map ptr:', addr)
         this.addr = addr
+        this.options = options
     }
     get size() {
         return this.addr.add(20).readU32()
     }
-    readElePair(ptr: NativePointer) {
-        console.log('data:', ptr.readU64().toString(16))
-        const keyPtr = ptr.add(16)
-        const valuePtr = keyPtr.add(24)
-        console.log('key:', keyPtr)
-        console.log('value:', valuePtr)
-        let data = '('
-        if (keyPtr.readU32() > 0)
-            data += new StdString(keyPtr).toString() + '='
-        if (valuePtr.readU32() > 0)
-            data += new StdString(valuePtr).toString()
-        data += '),'
-        return data
-    }
+    /**
+     * 中序遍历
+     * @param ptr 节点地址
+     * @returns 
+     */
     inorderTraverse(ptr: NativePointer) {
         const left = ptr.add(8)
         const right = left.add(4)
         let result: string = ''
         if (left.readU32() > 0)
             result += this.inorderTraverse(left.readPointer())
-        result += this.readElePair(ptr)
+        result += this.options.inspectElement(ptr)
         if (right.readU32() > 0)
             result += this.inorderTraverse(right.readPointer())
+        if (result.endsWith(','))
+            result = result.substring(0, result.length - 1)
+        
         return result
     }
     toString() {
         const startPtr = this.addr.add(8)
-        let data = ''
+        let data = `{ size:${this.size}, content:[`
         if (startPtr.readU32() > 0) {
             data = this.inorderTraverse(startPtr.readPointer())
         }
+        data += ']'
         return `StdMap{${data}}`
     }
+}
+
+export const stdMapString2StringParse = (p: NativePointer) => {
+    return new StdMap(p, {
+        inspectElement(ptr) {
+            // console.log('data:', ptr.readU64().toString(16))
+            const keyPtr = ptr.add(16)
+            const valuePtr = keyPtr.add(24)
+            // console.log('key:', keyPtr)
+            // console.log('value:', valuePtr)
+            const result = {
+                key: '',
+                value: '',
+            }
+            if (keyPtr.readU32() > 0)
+                result.key = new StdString(keyPtr).toString() || ''
+            if (valuePtr.readU32() > 0)
+                result.value = new StdString(valuePtr).toString() || ''
+            return JSON.stringify(result, null, 4) + ',\n'
+        }
+    }).toString()
 }

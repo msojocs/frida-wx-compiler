@@ -11,9 +11,12 @@
     "esModuleInterop": false,
     "moduleResolution": "nodenext",
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": "./",
+    "paths": {
+    }
   },
-  "files": [
-    "agent/index.ts"
+  "include": [
+    "agent/**/*.ts"
   ]
 }

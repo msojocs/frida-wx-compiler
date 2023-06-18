@@ -78,7 +78,7 @@ export default class StdVector {
 	}
 }
 
-export const StdVectorStringParse = (p: NativePointer) => {
+export const stdVectorStringParse = (p: NativePointer) => {
 	return new StdVector(p, {
 		introspectElement(p) {
 			return new StdString(p).toString() || 'empty'

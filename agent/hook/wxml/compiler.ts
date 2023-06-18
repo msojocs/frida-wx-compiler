@@ -1,6 +1,6 @@
 import type BaseAddr from "../utils/addr.js";
-import { StdString } from '../cpp/std_string.js'
-import StdVector, { StdVectorStringParse } from "../cpp/std_vector.js";
+import { StdString } from '../../cpp/std_string.js'
+import StdVector, { stdVectorStringParse } from "../../cpp/std_vector.js";
 
 export const hookCompiler = (baseAddr: BaseAddr) => {
 
@@ -34,7 +34,7 @@ export const hookCompiler = (baseAddr: BaseAddr) => {
                         console.log('[+] Argv3: ' + args[3]);
                         console.log('[+] Argv4: ' + args[4]);
                         console.log('[+] Argv5: ' + args[5]);
-                        console.log('[+] Argv6: ' + StdVectorStringParse(args[6]));
+                        console.log('[+] Argv6: ' + stdVectorStringParse(args[6]));
                         console.log('[+] Argv7: ' + args[7]);
                         console.log('[+] Argv8: ', args[8]) // bool isLLA
                         console.log('[+] Argv9: ', new StdString(args[9]).toString()) // gwxMark

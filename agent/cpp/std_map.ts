@@ -12,6 +12,7 @@ F8 CE DE 00 2B 00 00 00(key)  2B 00 00 00 0D F0 AD BA
  */
 
 import { StdString } from "./std_string.js"
+import { stdVectorStringParse } from "./std_vector.js"
 
 interface StdMapOption {
     inspectElement: (p: NativePointer) => string
@@ -74,6 +75,52 @@ export const stdMapString2StringParse = (p: NativePointer) => {
                 result.key = new StdString(keyPtr).toString() || ''
             if (valuePtr.readU32() > 0)
                 result.value = new StdString(valuePtr).toString() || ''
+            return JSON.stringify(result, null, 4) + ',\n'
+        }
+    }).toString()
+}
+export const stdMapString2IntParse = (p: NativePointer) => {
+    return new StdMap(p, {
+        inspectElement(ptr) {
+            // console.log('data:', ptr.readU64().toString(16))
+            const keyPtr = ptr.add(16)
+            const valuePtr = keyPtr.add(24)
+            // console.log('key:', keyPtr)
+            // console.log('value:', valuePtr)
+            const result = {
+                key: '',
+                value: 0,
+            }
+            if (keyPtr.readU32() > 0)
+                result.key = new StdString(keyPtr).toString() || ''
+            if (valuePtr.readU32() > 0)
+                result.value = valuePtr.readU32()
+            return JSON.stringify(result, null, 4) + ',\n'
+        }
+    }).toString()
+}
+
+/**
+ * map<string, vector<string>>
+ * @param p 
+ * @returns 
+ */
+export const stdMapString2VectorStringParse = (p: NativePointer) => {
+    return new StdMap(p, {
+        inspectElement(ptr) {
+            // console.log('data:', ptr.readU64().toString(16))
+            const keyPtr = ptr.add(16)
+            const valuePtr = keyPtr.add(24)
+            // console.log('key:', keyPtr)
+            // console.log('value:', valuePtr)
+            const result = {
+                key: '',
+                value: '',
+            }
+            if (keyPtr.readU32() > 0)
+                result.key = new StdString(keyPtr).toString() || ''
+            if (valuePtr.readU32() > 0)
+                result.value = stdVectorStringParse(valuePtr)
             return JSON.stringify(result, null, 4) + ',\n'
         }
     }).toString()

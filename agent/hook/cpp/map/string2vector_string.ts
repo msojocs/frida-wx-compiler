@@ -1,11 +1,12 @@
-import { stdMapString2StringParse } from "../../../cpp/std_map.js";
+import { stdMapString2VectorStringParse } from "../../../cpp/std_map.js";
 import BaseAddr from "../../utils/addr.js";
 import { StdString } from '../../../cpp/std_string.js'
 
-export const hookString2String = (baseAddr: BaseAddr) => {
+export const hookString2VectorString = (baseAddr: BaseAddr) => {
+ 
     {
-        const target = 'std::map<std::string,std::string>::operator[](char *this, int a2)'
-        const targetAddr = baseAddr.resolveAddress('0x500114')
+        const target = 'std::map<std::string,std::vector<std::string>>::lower_bound(char *this, int a2)'
+        const targetAddr = baseAddr.resolveAddress('0x524380')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -29,7 +30,7 @@ export const hookString2String = (baseAddr: BaseAddr) => {
                         console.log('arg0:', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        console.log(stdMapString2StringParse(ctx.ecx))
+                        console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -47,14 +48,15 @@ export const hookString2String = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    console.log('retval:', retval)
                     console.log(`${target} - onLeave\n\n`);
                 }
             });
         }
     }
     {
-        const target = 'std::map<std::string,std::string>::lower_bound(char *this, int a2)'
-        const targetAddr = baseAddr.resolveAddress('0x523FDC')
+        const target = 'std::map<std::string,std::vector<std::string>>::find( int a1, int a2,  int a3)'
+        const targetAddr = baseAddr.resolveAddress('0x52C528')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -71,14 +73,15 @@ export const hookString2String = (baseAddr: BaseAddr) => {
                         
                         console.log(`${target} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        // console.log('[+] Ctx: ' + args[-1]);
+                        console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])
-                        console.log('arg0:', new StdString(args[0]).toString())
+                        console.log('[+] Argv1: ', args[1])
+                        console.log('[+] Argv2: ', new StdString(args[2]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        console.log(stdMapString2StringParse(ctx.ecx))
+                        // console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -96,7 +99,7 @@ export const hookString2String = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    // console.log('retval:', retval)
+                    console.log('retval:', retval)
                     console.log(`${target} - onLeave\n\n`);
                 }
             });

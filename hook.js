@@ -153,7 +153,7 @@ try {
             } catch (error) {
                 console.log('error:', error)
             }
-            console.log('\n\n')
+            
             /*
             dumpAddr('Input', args[0], args[3].toInt32());
             this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -204,7 +204,7 @@ try {
             } catch (error) {
                 console.log('error:', error)
             }
-            console.log('\n\n')
+            
             /*
             dumpAddr('Input', args[0], args[3].toInt32());
             this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -248,7 +248,7 @@ try {
     //         } catch (error) {
     //             console.log('error:', error)
     //         }
-    //         console.log('\n\n')
+    //         
     //         /*
     //         dumpAddr('Input', args[0], args[3].toInt32());
     //         this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function

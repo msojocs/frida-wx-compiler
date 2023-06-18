@@ -54,6 +54,6 @@ if __name__ == '__main__':
     script.on('message', on_message)
     print('[*] Running CTF')
     script.load()
-    sys.stdin.read()
+    sys.stdin.readline()
     # print('api.hello() =>', script.exports.hello())
     process.detach()

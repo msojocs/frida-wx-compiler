@@ -1,11 +1,11 @@
-import type BaseAddr from "../utils/addr.js";
+import { stdMapString2IntParse } from "../../../cpp/std_map.js";
+import BaseAddr from "../../utils/addr.js";
+import { StdString } from '../../../cpp/std_string.js'
 
-export const hookCompiler = (baseAddr: BaseAddr) => {
-
+export const hookString2Int = (baseAddr: BaseAddr) => {
     {
-        const funcName = 'WXML::Compiler:'
-        const targetAddr = baseAddr.resolveAddress('0x40A124')
-        // ReadFile
+        const target = 'std::map<std::string,int>::operator[](_DWORD *this, int a2)'
+        const targetAddr = baseAddr.resolveAddress('0x50061C')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -20,17 +20,16 @@ export const hookCompiler = (baseAddr: BaseAddr) => {
                 onEnter: function (args) {
                     try {
                         
-                        console.log(`${funcName} - onEnter`);
+                        console.log(`${target} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])
-                        console.log('[+] Argv1: ' + args[1]); // This pointer will store the de/encrypted data
-                        
-                        console.log('arg0:', args[0].toInt32())
-                        console.log('arg1:', args[1].readUtf8String())
-                        // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
+                        console.log('arg0:', new StdString(args[0]).toString())
+                        const ctx = this.context as any
+                        console.log('ecx pointer:', ctx.ecx)
+                        console.log(stdMapString2IntParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -48,6 +47,7 @@ export const hookCompiler = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    console.log(`${target} - onLeave\n\n`);
                 }
             });
         }

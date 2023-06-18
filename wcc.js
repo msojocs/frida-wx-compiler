@@ -154,7 +154,7 @@ try {
                 } catch (error) {
                     console.log('error:', error)
                 }
-                console.log('\n\n')
+                
                 /*
                 dumpAddr('Input', args[0], args[3].toInt32());
                 this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -168,8 +168,9 @@ try {
                 dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                 console.log('[+] Returned from SomeFunc: ' + retval);
                 */
-               console.log('prt:', fileContentPtr)
+               console.log('ptr:', fileContentPtr)
                console.log('data:', StdString.length(fileContentPtr.readPointer()))
+               console.log('ReadFile - onLeave\n\n');
             }
         });
     }
@@ -211,7 +212,7 @@ try {
                 } catch (error) {
                     console.log('error:', error)
                 }
-                console.log('\n\n')
+                
                 /*
                 dumpAddr('Input', args[0], args[3].toInt32());
                 this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -265,7 +266,7 @@ try {
     //         } catch (error) {
     //             console.log('error:', error)
     //         }
-    //         console.log('\n\n')
+    //         
     //         /*
     //         dumpAddr('Input', args[0], args[3].toInt32());
     //         this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -309,7 +310,7 @@ try {
     //         } catch (error) {
     //             console.log('error:', error)
     //         }
-    //         console.log('\n\n')
+    //         
     //         /*
     //         dumpAddr('Input', args[0], args[3].toInt32());
     //         this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function

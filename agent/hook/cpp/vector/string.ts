@@ -49,7 +49,7 @@ export const hookString = (baseAddr: BaseAddr) => {
                     } catch (error) {
                         console.log('error:', error)
                     }
-                    console.log('\n\n')
+                    
                     /*
                     dumpAddr('Input', args[0], args[3].toInt32());
                     this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -63,7 +63,7 @@ export const hookString = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    console.log(`${target} - onLeave`);
+                    console.log(`${target} - onLeave\n\n`);
                 }
             });
         }
@@ -111,7 +111,7 @@ export const hookString = (baseAddr: BaseAddr) => {
                     } catch (error) {
                         console.log('error:', error)
                     }
-                    console.log('\n\n')
+                    
                     /*
                     dumpAddr('Input', args[0], args[3].toInt32());
                     this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -125,7 +125,7 @@ export const hookString = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    console.log(`${target} - onLeave`);
+                    console.log(`${target} - onLeave\n\n`);
                 }
             });
         }

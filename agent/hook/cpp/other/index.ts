@@ -1,13 +1,12 @@
-import { stdMapString2VectorStringParse } from "../../../cpp/std_map.js";
-import BaseAddr from "../../utils/addr.js";
-import { StdString } from '../../../cpp/std_string.js'
+import { stdMapString2StringParse } from "../../../cpp/std_map.js";
+import { StdString } from "../../../cpp/std_string.js";
+import BaseAddr from "../../../hook/utils/addr.js";
 
-export const hookString2VectorString = (baseAddr: BaseAddr) => {
- 
+export const hookOther = (baseAddr: BaseAddr) => {
     {
-        const target = 'std::map<std::string,std::vector<std::string>>::lower_bound(std::string const&)'
-        // std::_Rb_tree<std::string,std::pair<std::string const,std::vector<std::string>>,std::_Select1st<std::pair<std::string const,std::vector<std::string>>>,std::less<std::string>,std::allocator<std::pair<std::string const,std::vector<std::string>>>>::lower_bound(std::string const&)
-        const targetAddr = baseAddr.resolveAddress('0x524380')
+        const target = 'std::operator<<char>(std::string const&,std::string const&)'
+        const targetAddr = baseAddr.resolveAddress('0x52F4D0')
+        // emplace_back
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -28,10 +27,11 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])
-                        console.log('arg0:', new StdString(args[0]).toString())
+                        console.log('Argv0:', new StdString(args[0]).toString())
+                        console.log('[+] Argv1: ', args[1]); // This pointer will store the de/encrypted data
+                        console.log('Argv1:', new StdString(args[1]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -56,8 +56,8 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
         }
     }
     {
-        const target = 'std::map<std::string,std::vector<std::string>>::find( int a1, int a2,  int a3)'
-        const targetAddr = baseAddr.resolveAddress('0x52C528')
+        const target = '<std::string,std::pair<std::string const,zcc::shared_ptr<std::basic_stringstream>>>::lower_bound(std::string const&)'
+        const targetAddr = baseAddr.resolveAddress('0x5237E8')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -78,11 +78,9 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])
-                        console.log('[+] Argv1: ', args[1])
-                        console.log('[+] Argv2: ', new StdString(args[2]).toString())
+                        console.log('Argv0:', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        // console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }

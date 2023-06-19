@@ -1,7 +1,7 @@
 import type BaseAddr from "../utils/addr.js";
 import { StdString } from '../../cpp/std_string.js'
 import StdVector, { stdVectorStringParse } from "../../cpp/std_vector.js";
-import { stdMapString2StringParse, stdMapString2VectorStringParse } from "../../cpp/std_map.js";
+import { stdMapString2IntParse, stdMapString2StringParse, stdMapString2VectorStringParse } from "../../cpp/std_map.js";
 
 export const hookCompiler = (baseAddr: BaseAddr) => {
 
@@ -109,14 +109,16 @@ export const hookCompiler = (baseAddr: BaseAddr) => {
                         console.log('[+] content: ', new StdString(args[1]).toString()); // This pointer will store the de/encrypted data
                         console.log('[+] Argv2: ' + args[2]);
                         console.log('[+] gwxMark: ', new StdString(args[3]).toString());
-                        console.log('[+] fMark: ' + args[4]);
+                        console.log('[+] fMark: ', new StdString(args[4]).toString());
                         console.log('[+] Argv5: ', stdMapString2StringParse(args[5]));
                         console.log('[+] Argv6: ', args[6]);
-                        console.log('[+] Argv7 result: ', (args[7]));
+                        console.log('[+] Argv7 result: ', args[7]);
                         console.log('[+] Argv8 map1: ', stdMapString2StringParse(args[8]))
                         argument.map1 = args[8]
-                        console.log('[+] Argv9 map2: ', args[9])
-                        argument.map1 = args[9]
+                        console.log('[+] Argv9 map2: ', stdMapString2IntParse(args[9]))
+                        argument.map2 = args[9]
+                        console.log('[+] Argv10: ', args[10])
+                        console.log('[+] Argv11: ', args[11])
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
                     } catch (error) {
                         console.log('error:', error)
@@ -134,8 +136,10 @@ export const hookCompiler = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                   if (argument.map1)
+                    if (argument.map1)
                         console.log('map1:', stdMapString2StringParse(argument.map1))
+                    if (argument.map2)
+                        console.log('map2:', stdMapString2IntParse(argument.map2))
                     // console.log('dict:', stdMapString2StringParse(argument.dict))
                     console.log(`${funcName} - onLeave\n\n`);
                 }

@@ -51,9 +51,8 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
         }
     }
     {
-        const funcName = 'WXML::DOMLib::Tokenizer::GetTokens'
+        const funcName = 'WXML::DOMLib::Tokenizer::GetTokens(std::vector<WXML::DOMLib::Token> &,std::string &,std::vector<WXML::DOMLib::Token> &)'
         const targetAddr = baseAddr.resolveAddress('0x42AFB8')
-        // ReadFile
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 

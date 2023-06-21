@@ -3,7 +3,7 @@ import BaseAddr from "../../../hook/utils/addr.js";
 
 export const hookStdString = (baseAddr: BaseAddr) => {
     {
-        const target = 'std::string::substr(_DWORD *ecx0, std::string *this, unsigned int a3, unsigned int a4)'
+        const target = 'std::string::substr(uint, uint)'
         const targetAddr = baseAddr.resolveAddress('0x479490')
         // emplace_back
         if (targetAddr != null) {
@@ -53,7 +53,7 @@ export const hookStdString = (baseAddr: BaseAddr) => {
         }
     }
     {
-        const target = 'std::string::substr(_DWORD *this, _DWORD *a2, unsigned int a3, unsigned int a4)'
+        const target = 'std::string::substr(uint, uint)'
         const targetAddr = baseAddr.resolveAddress('0x483FD0')
         // emplace_back
         if (targetAddr != null) {

@@ -50,6 +50,7 @@ export const hookMachine = (baseAddr: BaseAddr) => {
         }
     }
     // {
+    //     let i = 0;
     //     const funcName = 'WXML::DOMLib::Machine::Feed(char,std::vector<WXML::DOMLib::Token> &,std::string &,std::vector<WXML::DOMLib::Token> &,int)'
     //     const targetAddr = baseAddr.resolveAddress('0x42A82E')
     //     // ReadFile
@@ -66,7 +67,7 @@ export const hookMachine = (baseAddr: BaseAddr) => {
     //             */
     //             onEnter: function (args) {
     //                 try {
-                        
+    //                     if (i++ > 100) return
     //                     console.log(`${funcName} - onEnter`);
     //                     console.log('[+] Called targetAddr:' + targetAddr);
     //                     console.log('[+] Ctx: ' + args[-1]);

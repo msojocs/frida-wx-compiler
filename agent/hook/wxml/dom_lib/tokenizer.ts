@@ -54,6 +54,7 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
         const funcName = 'WXML::DOMLib::Tokenizer::GetTokens(std::vector<WXML::DOMLib::Token> &,std::string &,std::vector<WXML::DOMLib::Token> &)'
         const targetAddr = baseAddr.resolveAddress('0x42AFB8')
         if (targetAddr != null) {
+            let arg1: NativePointer | null;
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -75,6 +76,7 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                         console.log('[+] Argv0: ', args[0])
                         console.log('[+] Argv1: ', new StdString(args[1]).toString());
                         console.log('[+] Argv2: ', args[2]);
+                        arg1 = args[1]
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -93,6 +95,8 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
                     console.log('retval:', retval)
+                    // if (arg1)
+                    //     console.log('[+] Argv1: ', new StdString(arg1).toString());
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });

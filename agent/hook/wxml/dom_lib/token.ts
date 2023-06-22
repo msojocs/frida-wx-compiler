@@ -54,6 +54,7 @@ export const hookToken = (baseAddr: BaseAddr) => {
         const funcName = 'WXML::DOMLib::Token::GetTemplateContent(std::string const&,std::string&)'
         const targetAddr = baseAddr.resolveAddress('0x00470100')
         // ReadFile
+        let arg0: NativePointer | null, arg1: NativePointer | null;
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -75,6 +76,8 @@ export const hookToken = (baseAddr: BaseAddr) => {
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', new StdString(args[0]).toString())
                         console.log('[+] Argv1: ', new StdString(args[1]).toString())
+                        arg0 = args[0];
+                        arg1 = args[1];
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -93,6 +96,10 @@ export const hookToken = (baseAddr: BaseAddr) => {
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
                     console.log('retval:', retval)
+                    if (arg0)
+                        console.log('[+] Argv0: ', new StdString(arg0).toString())
+                    if (arg1)
+                        console.log('[+] Argv1: ', new StdString(arg1).toString())
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });
@@ -187,6 +194,7 @@ export const hookToken = (baseAddr: BaseAddr) => {
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
                     console.log('retval:', retval)
+                    console.log('[+] retval: ', new StdString(retval).toString())
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });

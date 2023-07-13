@@ -1,11 +1,10 @@
-import { stdMapString2IntParse } from "../../../cpp/std_map.js";
-import BaseAddr from "../../utils/addr.js";
-import { StdString } from '../../../cpp/std_string.js'
+import { stdDequeStdStringParse } from "../../../cpp/std_deque.js";
+import BaseAddr from "../../../hook/utils/addr.js";
 
-export const hookString2Int = (baseAddr: BaseAddr) => {
+export const hookDequeStdString = (baseAddr: BaseAddr) => {
     {
-        const target = 'std::map<std::string,int>::operator[](std::string const&)'
-        const targetAddr = baseAddr.resolveAddress('0x50061C')
+        const target = 'std::deque<std::string>::pop_back(void)	.text	00502170'
+        const targetAddr = baseAddr.resolveAddress('0x00502170')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
@@ -22,14 +21,13 @@ export const hookString2Int = (baseAddr: BaseAddr) => {
                         
                         console.log(`${target} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])
-                        console.log('arg0:', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        // console.log(stdMapString2IntParse(ctx.ecx))
+                        console.log(stdDequeStdStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }

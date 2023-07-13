@@ -11,7 +11,7 @@ pointer _Myend;		// pointer to end of array
 
 export interface StdVectorOption {
     elementSize: number
-    introspectElement: (p: NativePointer) => string
+    introspectElement: (p: NativePointer) => any
 }
 
 export default class StdVector {
@@ -55,7 +55,25 @@ export default class StdVector {
 	get capacity() {
 		return this.countBetween(this.myfirst, this.myend);
 	}
-
+	toJSON() {
+		const result: Record<string, any> = {
+			type: 'std::vector',
+			first: this.myfirst,
+			last: this.mylast,
+			end: this.myend,
+			size: this.size,
+			capacity: this.capacity,
+			data: []
+		}
+		const first = this.myfirst
+		if(!first.isNull()) {
+			const last = this.mylast;
+			for(let p = first; p.compare(last) < 0; p = p.add(this.elementSize)) {
+				result.data.push(this.introspectElement(p));
+			}
+		}
+		return result
+	}
 	toString() {
 		let r = "std::vector(" + this.myfirst + ", " + this.mylast + ", " + this.myend + ")";
 		r += "{ size: " + this.size + ", capacity: " + this.capacity;

@@ -69,7 +69,7 @@ export const hookString = (baseAddr: BaseAddr) => {
         }
     }
     {
-        const target = 'std::vector<std::string>::push_back(_DWORD *this, int a2)'
+        const target = 'std::vector<std::string>::push_back(std::string const&)'
         const targetAddr = baseAddr.resolveAddress('0x5070B0')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
@@ -90,24 +90,23 @@ export const hookString = (baseAddr: BaseAddr) => {
                         console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        console.log('[+] Argv0: ', args[0])
-                        console.log('[+] Argv1: ' + args[1]); // This pointer will store the de/encrypted data
+                        console.log('[+] Argv0: ', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('vec pointer:', ctx.ecx)
-                        if (ptr(ctx.ecx).readU32() > 0) {
-                            const vec = new StdVector(ctx.ecx, {
-                                introspectElement: (p) => {
-                                    // console.log('introspectElement:', p)
-                                    return new StdString(p).toString() || 'empty'
-                                },
-                                elementSize: 24
-                            })
-                            console.log('vec data:')
-                            console.log(vec.toString())
-                        }
-                        else {
-                            console.log('skip null')
-                        }
+                        // if (ptr(ctx.ecx).readU32() > 0) {
+                        //     const vec = new StdVector(ctx.ecx, {
+                        //         introspectElement: (p) => {
+                        //             // console.log('introspectElement:', p)
+                        //             return new StdString(p).toString() || 'empty'
+                        //         },
+                        //         elementSize: 24
+                        //     })
+                        //     console.log('vec data:')
+                        //     console.log(vec.toString())
+                        // }
+                        // else {
+                        //     console.log('skip null')
+                        // }
                     } catch (error) {
                         console.log('error:', error)
                     }

@@ -1,20 +1,16 @@
 
-// std::deque of MSVC 120 (2013)
+// std::deque of MingW 120 (2013)
+
+import { StdString } from "./std_string.js";
 
 /*
-_Container_proxy *_Myproxy; // from _Container_base12
 
-_Mapptr _Map;		// pointer to array of pointers to blocks
-size_type _Mapsize;	// size of map array, zero or 2^N
-size_type _Myoff;	// offset of initial element
-size_type _Mysize;	// current length of sequence
+	_Map_pointer _M_map;
+	size_t _M_map_size;
+	iterator _M_start;
+	iterator _M_finish;
 
-
-#define _DEQUESIZ	(sizeof (value_type) <= 1 ? 16 \
-					: sizeof (value_type) <= 2 ? 8 \
-					: sizeof (value_type) <= 4 ? 4 \
-					: sizeof (value_type) <= 8 ? 2 \
-					: 1)	// elements per block (a power of 2)
+std::string size 24
 */
 
 export default class StdDeque {
@@ -44,30 +40,23 @@ export default class StdDeque {
 	}
 
 	get mapsize() {
+		return this.addr.add(Process.pointerSize * 1).readPointer();
+	}
+
+	get iteratorStart() {
 		return this.addr.add(Process.pointerSize * 2).readPointer();
 	}
 
-	get myoff() {
-		return this.addr.add(Process.pointerSize * 3).readPointer();
-	}
-
-	get mysize() {
-		return this.addr.add(Process.pointerSize * 4).readPointer();
+	get iteratorFinish() {
+		return this.addr.add(Process.pointerSize * 6).readPointer();
 	}
 
 	get contents() {
-		const r: string[] = [];
-		const DEQUESIZ = this.DEQUESIZ;
-		const map = this.map;
-		const mapsize = this.mapsize;
-		const myoff = this.myoff.toInt32();
-		const mysize = this.mysize.toInt32();
-		for(let i=myoff; i<myoff+mysize; i++) {
-			const wrappedIndex = i % mapsize;
-			const blockIndex = Math.floor(wrappedIndex / DEQUESIZ);
-			const off = wrappedIndex % DEQUESIZ;
-			const blockAddr = map.add(Process.pointerSize * blockIndex).readPointer();
-			const elemAddr = blockAddr.add(this.valueSize * off);
+		const r: any[] = [];
+		const iteratorStart = this.iteratorStart.toInt32();
+		const iteratorFinish = this.iteratorFinish.toInt32();
+		for(let i = iteratorStart; i < iteratorFinish; i += this.valueSize) {
+			const elemAddr = new NativePointer(i)
 			let elem;
 			if(this.introspectElement) {
 				elem = this.introspectElement(elemAddr);
@@ -82,8 +71,19 @@ export default class StdDeque {
 	toString() {
 			return "deque@" + this.addr
 				+ "{ map=" + this.map
-				+ ", offset=" + this.myoff
-				+ ", size=" + this.mysize
+				+ ", offset=" + this.iteratorStart
+				+ ", size=" + this.iteratorFinish
 				+ ", contents: " + this.contents + "}";
 	}
+}
+
+export const stdDequeStdStringParse = (p: NativePointer) => {
+	/*
+	D0 B5 ED 00 10 92 ED 00  E0(起点) EE ED 00 08 00 00 00
+	58 B1 ED 00(iteratorStart) 58 B1 ED 00  50 B3 ED 00 EC EE ED 00
+	70 B1 ED 00(iteratorFinish) 58 B1 ED 00  50 B3 ED 00 EC EE ED 00
+	*/
+	return new StdDeque(p, 24, (elePoint) => {
+		return new StdString(elePoint).toString() || ''
+	})
 }

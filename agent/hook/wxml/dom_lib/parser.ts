@@ -26,7 +26,7 @@ export const hookParser = (baseAddr: BaseAddr) => {
                         console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        console.log('[+] Argv0: ', args[0].readUtf8String())
+                        // console.log('[+] Argv0: ', args[0].readUtf8String())
                         console.log('[+] Argv1: ', new StdString(args[1]).toString()); // This pointer will store the de/encrypted data
                         console.log('[+] Argv2: ', new StdString(args[2]).toString());
                         console.log('[+] Argv3: ', args[3]);

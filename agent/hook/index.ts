@@ -4,7 +4,7 @@ import { hookWcc } from "./wcc/index.js";
 import { hookWXML } from "./wxml/index.js";
 
 export const hook = (baseAddr: BaseAddr) => {
-    hookCPP(baseAddr)
+    // hookCPP(baseAddr)
     hookWXML(baseAddr)
-    hookWcc(baseAddr)
+    // hookWcc(baseAddr)
 }

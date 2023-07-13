@@ -1,4 +1,5 @@
 import BaseAddr from "../utils/addr.js"
+import { hookDeque } from "./deque/index.js"
 import { hookMap } from "./map/index.js"
 import { hookOther } from "./other/index.js"
 import { hookStdString } from "./string/index.js"
@@ -11,4 +12,5 @@ export const hookCPP = (baseAddr: BaseAddr) => {
     hookStdString(baseAddr)
     hookOther(baseAddr)
     hookStringStream(baseAddr)
+    hookDeque(baseAddr)
 }

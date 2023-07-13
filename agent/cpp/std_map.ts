@@ -15,7 +15,7 @@ import { StdString } from "./std_string.js"
 import { stdVectorStringParse } from "./std_vector.js"
 
 interface StdMapOption {
-    inspectElement: (p: NativePointer) => string
+    inspectElement: (p: NativePointer) => any
 }
 const BUF_SIZE = 16
 export default class StdMap {
@@ -46,6 +46,29 @@ export default class StdMap {
         if (result.endsWith(','))
             result = result.substring(0, result.length - 1)
         
+        return result
+    }
+    inorderTraverseJSON(ptr: NativePointer) {
+        const left = ptr.add(8)
+        const right = left.add(4)
+        let result: any[] = []
+        if (left.readU32() > 0)
+            result.push(this.inorderTraverse(left.readPointer()))
+        result.push(this.options.inspectElement(ptr))
+        if (right.readU32() > 0)
+            result.push(this.inorderTraverse(right.readPointer()))
+        
+        return result
+    }
+    toJSON() {
+        const result: Record<string, any> = {
+            size: this.size,
+            data: []
+        }
+        const startPtr = this.addr.add(8)
+        if (startPtr.readU32() > 0) {
+            result.data = this.inorderTraverseJSON(startPtr.readPointer())
+        }
         return result
     }
     toString() {

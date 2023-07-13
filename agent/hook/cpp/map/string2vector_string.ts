@@ -31,7 +31,7 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
                         console.log('arg0:', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        console.log(stdMapString2VectorStringParse(ctx.ecx))
+                        // console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -56,7 +56,7 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
         }
     }
     {
-        const target = 'std::map<std::string,std::vector<std::string>>::find( int a1, int a2,  int a3)'
+        const target = 'std::map<std::string,std::vector<std::string>>::find( int a1, int a2, std::string const&)'
         const targetAddr = baseAddr.resolveAddress('0x52C528')
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
@@ -132,7 +132,7 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
                         console.log('[+] Argv0: ', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        console.log(stdMapString2VectorStringParse(ctx.ecx))
+                        // console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -182,7 +182,7 @@ export const hookString2VectorString = (baseAddr: BaseAddr) => {
                         console.log('[+] Argv0: ', new StdString(args[0]).toString())
                         const ctx = this.context as any
                         console.log('ecx pointer:', ctx.ecx)
-                        console.log(stdMapString2VectorStringParse(ctx.ecx))
+                        // console.log(stdMapString2VectorStringParse(ctx.ecx))
                     } catch (error) {
                         console.log('error:', error)
                     }

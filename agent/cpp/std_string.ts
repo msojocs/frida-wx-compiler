@@ -13,8 +13,8 @@ size_type _Myres;	// current storage reserved for string
 /**
  * 总24字节
  * 前8个字节
- * 00 00 00 00, 00 00 00 00
- * 前四个字节地址，后四个字节长度
+ * 00 00 00 00, 00 00 00 00, 00 00 00 00
+ * 前四个字节地址，四个字节长度，四个字节容量
  */
 export const STD_STRING_BUF_SIZE = 4;
 
@@ -34,20 +34,23 @@ export class StdString {
 	}
 
 	get size() {
-		return this.addr.add(STD_STRING_BUF_SIZE).readPointer();
+		return this.addr.add(4).readU32();
 	}
 
 	get reservedSize() {
-		return this.addr.add(STD_STRING_BUF_SIZE).add(Process.pointerSize).readPointer();
+		return this.addr.add(STD_STRING_BUF_SIZE).add(Process.pointerSize).readU32();
 	}
 
 	toString() {
 		const size = this.size;
-		if(size.isNull()) {
+		if(size == 0) {
 			return "<EMPTY std::string>";
 		}
 		const addr = this.bufAddr
-		// console.log('buf addr:', addr)
-		return addr.readUtf8String(size.toInt32());
+		try {
+			return addr.readUtf8String(size);
+		} catch (error) {
+			return addr.readUtf8String(size - 1);
+		}
 	}
 }

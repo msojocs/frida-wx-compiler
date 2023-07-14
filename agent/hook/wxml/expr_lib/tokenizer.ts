@@ -1,14 +1,15 @@
 import { StdString } from "../../../cpp/std_string.js";
 import BaseAddr from "../../../hook/utils/addr.js";
-import Machine from "./class/machine.js";
+import { stdVectorExprLibToken } from "./class/token.js";
 
-export const hookMachine = (baseAddr: BaseAddr) => {
-  
+export const hookTokenizer = (baseAddr: BaseAddr) => {
+    let tokenList: NativePointer
     {
-        const funcName = 'WXML::DOMLib::Machine::Machine(std::string const& filePath)'
-        const targetAddr = baseAddr.resolveAddress('0x42A6F2')
+        const funcName = 'WXML::EXPRLib::Tokenizer::GetTokens(std::vector<WXML::EXPRLib::Token> &,std::string &)'
+        const targetAddr = baseAddr.resolveAddress('0x0042EEC8')
         // ReadFile
         if (targetAddr != null) {
+            const arg: Record<string, NativePointer> = {}
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -27,7 +28,10 @@ export const hookMachine = (baseAddr: BaseAddr) => {
                         console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        console.log('[+] Argv0: ', new StdString(args[0]).toString());
+                        // console.log('[+] Argv0: ', args[0].readUtf8String())
+                        arg.a2 = args[0]
+                        tokenList = arg.a2
+                        arg.a3 = args[1]
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -45,20 +49,19 @@ export const hookMachine = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    if (arg.a2) {
+                        console.log(JSON.stringify(stdVectorExprLibToken(arg.a2), null, 4))
+                    }
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });
         }
     }
     // {
-    //     let i = 0;
-    //     const funcName = 'WXML::DOMLib::Machine::Feed(char,std::vector<WXML::DOMLib::Token> &,std::string &,std::vector<WXML::DOMLib::Token> &,int)'
-    //     const targetAddr = baseAddr.resolveAddress('0x42A82E')
-    //     // ReadFile
+    //     const funcName = 'WXML::DOMLib::Tokenizer::GetTokens(std::vector<WXML::DOMLib::Token> &,std::string &,std::vector<WXML::DOMLib::Token> &)'
+    //     const targetAddr = baseAddr.resolveAddress('0x42AFB8')
     //     if (targetAddr != null) {
-    //         let arg: Record<string, NativePointer> = {
-                
-    //         }
+    //         let arg1: NativePointer | null;
     //         Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
     //             // When function is called, print out its parameters
@@ -71,21 +74,16 @@ export const hookMachine = (baseAddr: BaseAddr) => {
     //             */
     //             onEnter: function (args) {
     //                 try {
+                        
     //                     console.log(`${funcName} - onEnter`);
     //                     console.log('[+] Called targetAddr:' + targetAddr);
-    //                     // console.log('[+] Ctx: ' + args[-1]);
+    //                     console.log('[+] Ctx: ' + args[-1]);
     //                     // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
     //                     // console.log('arg0:', readStdString(args[0]))
-    //                     const t = String.fromCharCode(parseInt(args[0].toString(10)))
-    //                     console.log('[+] Argv0:->' + JSON.stringify({value: t}) + '<-');
-    //                     // console.log('[+] Argv1: ', args[1]);
-    //                     // console.log('[+] Argv2: ', new StdString(args[2]).toString());
-    //                     // console.log('[+] Argv3: ', args[3]);
-    //                     // console.log('[+] Argv4: ', args[4]);
-    //                     const ctx = this.context as any
-    //                     // console.log('ecx pointer:', ctx.ecx)
-    //                     arg.ecx = ctx.ecx
-    //                     // console.log('Machine:', new Machine(ctx.ecx).toJSON())
+    //                     console.log('[+] Argv0: ', args[0])
+    //                     console.log('[+] Argv1: ', new StdString(args[1]).toString());
+    //                     console.log('[+] Argv2: ', args[2]);
+    //                     arg1 = args[1]
     //                 } catch (error) {
     //                     console.log('error:', error)
     //                 }
@@ -103,10 +101,9 @@ export const hookMachine = (baseAddr: BaseAddr) => {
     //                 dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
     //                 console.log('[+] Returned from SomeFunc: ' + retval);
     //                 */
-    //                if (arg.ecx) {
-    //                     console.log('Machine:', JSON.stringify(new Machine(arg.ecx).toJSON(), null, 4))
-    //                 }
     //                 console.log('retval:', retval)
+    //                 // if (arg1)
+    //                 //     console.log('[+] Argv1: ', new StdString(arg1).toString());
     //                 console.log(`${funcName} - onLeave\n\n`);
     //             }
     //         });

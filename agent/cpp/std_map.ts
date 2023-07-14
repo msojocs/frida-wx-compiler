@@ -22,7 +22,6 @@ export default class StdMap {
     private addr: NativePointer
     private options: StdMapOption
     constructor(addr: NativePointer, options: StdMapOption) {
-        console.log('map ptr:', addr)
         this.addr = addr
         this.options = options
     }
@@ -53,15 +52,16 @@ export default class StdMap {
         const right = left.add(4)
         let result: any[] = []
         if (left.readU32() > 0)
-            result.push(this.inorderTraverse(left.readPointer()))
+            result.push(...this.inorderTraverseJSON(left.readPointer()))
         result.push(this.options.inspectElement(ptr))
         if (right.readU32() > 0)
-            result.push(this.inorderTraverse(right.readPointer()))
+            result.push(...this.inorderTraverseJSON(right.readPointer()))
         
         return result
     }
     toJSON() {
         const result: Record<string, any> = {
+            type: 'std::map',
             size: this.size,
             data: []
         }

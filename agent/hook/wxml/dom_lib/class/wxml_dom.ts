@@ -1,6 +1,7 @@
-import StdVector from "../../../cpp/std_vector.js"
-import { stdMapString2StringParse } from "../../../cpp/std_map.js"
-import { StdString } from "../../../cpp/std_string.js"
+import StdVector from "../../../../cpp/std_vector.js"
+import StdMap, { stdMapString2StringParse } from "../../../../cpp/std_map.js"
+import { StdString } from "../../../../cpp/std_string.js"
+import { stdMapString2DomLibToken } from "./token.js"
 
 const stdVectorPtrWxmlDom = (addr: NativePointer): Record<string, any> => {
     const ret = new StdVector(addr, {
@@ -14,6 +15,25 @@ const stdVectorPtrWxmlDom = (addr: NativePointer): Record<string, any> => {
     return out
 }
 
+const stdMapString2WxmlDom = (addr: NativePointer) => {
+    return new StdMap(addr, {
+        inspectElement: (ptr) => {
+            const keyPtr = ptr.add(16)
+            const valuePtr = keyPtr.add(24)
+            const result: Record<string, any> = {
+                key: '',
+                value: '',
+            }
+            if (keyPtr.readU32() > 0)
+                result.key = new StdString(keyPtr).toString() || ''
+            if (valuePtr.readU32() > 0) {
+                // result.value = new StdString(valuePtr).toString() || ''
+                result.value = new WxmlDom(valuePtr.readPointer()).toJSON()
+            }
+            return result
+        }
+    }).toJSON()
+}
 export default class WxmlDom {
     
     private addr: NativePointer
@@ -26,6 +46,9 @@ export default class WxmlDom {
     offset_24() {
         return new StdString(this.addr.add(24)).toString() || ''
     }
+    offset_48() {
+        return stdMapString2DomLibToken(this.addr.add(48)) || ''
+    }
     offset_72() {
         return stdVectorPtrWxmlDom(this.addr.add(72))
     }
@@ -36,6 +59,7 @@ export default class WxmlDom {
         const result = {
             offset_0: this.offset_0(),
             offset_24: this.offset_24(),
+            offset_48: this.offset_48(),
             offset_72: this.offset_72(),
             offset_272: this.offset_272(),
         }

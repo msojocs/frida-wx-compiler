@@ -1,11 +1,16 @@
-import { stdDequeStdStringParse } from "../../../cpp/std_deque.js";
+import { StdString } from "../../../cpp/std_string.js";
 import BaseAddr from "../../../hook/utils/addr.js";
+import { stdVectorExprLibToken } from "./class/token.js";
 
-export const hookDequeStdString = (baseAddr: BaseAddr) => {
+export const hookToken = (baseAddr: BaseAddr) => {
+  
+    
     {
-        const target = 'std::deque<std::string>::pop_back(void)	.text	00502170'
-        const targetAddr = baseAddr.resolveAddress('0x00502170')
+        const funcName = 'WXML::EXPRLib::Token::GetTokenName(void)'
+        const targetAddr = baseAddr.resolveAddress('0x0042EA8E')
+        // ReadFile
         if (targetAddr != null) {
+            const arg: Record<string, NativePointer> = {}
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -19,15 +24,12 @@ export const hookDequeStdString = (baseAddr: BaseAddr) => {
                 onEnter: function (args) {
                     try {
                         
-                        console.log(`${target} - onEnter`);
+                        console.log(`${funcName} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        console.log('[+] Argv0: ', args[0])
-                        // const ctx = this.context as any
-                        // console.log('ecx pointer:', ctx.ecx)
-                        // console.log(stdDequeStdStringParse(ctx.ecx))
+                        // console.log('[+] Argv0: ', args[0].readUtf8String())
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -45,7 +47,8 @@ export const hookDequeStdString = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    console.log(`${target} - onLeave\n\n`);
+                    console.log('name:', retval.readUtf8String());
+                    console.log(`${funcName} - onLeave\n\n`);
                 }
             });
         }

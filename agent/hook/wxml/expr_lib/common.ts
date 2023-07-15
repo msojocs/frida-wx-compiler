@@ -1,12 +1,11 @@
-import BaseAddr from "../../../hook/utils/addr.js";
 import { StdString } from "../../../cpp/std_string.js";
-import ExprSyntaxTree from "./class/exper_syntax_tree.js";
+import BaseAddr from "../../../hook/utils/addr.js";
 
-export const hookExprSyntaxTree = (baseAddr: BaseAddr) => {
-
+export const hookCommon = (baseAddr: BaseAddr) => {
+  
     {
-        const funcName = 'WXML::EXPRLib::ExprSyntaxTree::RenderAsOps(std::stringstream &,std::string const&,bool &)'
-        const targetAddr = baseAddr.resolveAddress('0x0042B518')
+        const funcName = 'WXML::EXPRLib::OutputAsStringOrKeyWord(std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>> & a1,std::string const& a2, std::string const& a3, bool & a4)'
+        const targetAddr = baseAddr.resolveAddress('0x0042B43D')
         // ReadFile
         if (targetAddr != null) {
             const arg: Record<string, NativePointer> = {}
@@ -28,15 +27,14 @@ export const hookExprSyntaxTree = (baseAddr: BaseAddr) => {
                         console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        // console.log('[+] Argv0: ', args[0]);
-                        console.log('[+] a3: ', new StdString(args[1]).toString());
-                        console.log('[+] a4: ', args[2]);
-                        arg.a3 = args[1]
-                        arg.a4 = args[2]
-                        const ctx = this.context as any
-                        const ecx: NativePointer = ctx.ecx
-                        console.log('ecx:', ecx)
-                        console.log('data:', JSON.stringify(new ExprSyntaxTree(ecx).toJSON(), null, 4))
+                        console.log('[+] a1: ', args[0]);
+                        console.log('[+] a2: ', new StdString(args[1]).toString());
+                        console.log('[+] a3: ', new StdString(args[2]).toString());
+                        console.log('[+] a4: ', args[3]);
+                        arg.a1 = args[0]
+                        arg.a2 = args[1]
+                        arg.a3 = args[2]
+                        arg.a4 = args[3]
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -54,11 +52,14 @@ export const hookExprSyntaxTree = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    if (arg.a2) {
+                        console.log('a2: ', new StdString(arg.a2).toString())
+                    }
                     if (arg.a3) {
                         console.log('a3: ', new StdString(arg.a3).toString())
                     }
                     if (arg.a4) {
-                        console.log('a4: ', arg.a4)
+                        console.log('a4: ',arg.a4)
                     }
                     console.log(`${funcName} - onLeave\n\n`);
                 }

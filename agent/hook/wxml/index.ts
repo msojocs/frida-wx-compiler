@@ -5,6 +5,6 @@ import { hookExprLib } from "./expr_lib/index.js";
 
 export const hookWXML = (baseAddr: BaseAddr) => {
     // hookCompiler(baseAddr)
-    // hookDomLib(baseAddr)
-    hookExprLib(baseAddr)
+    hookDomLib(baseAddr)
+    // hookExprLib(baseAddr)
 }

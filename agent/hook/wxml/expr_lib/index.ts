@@ -1,4 +1,5 @@
 import BaseAddr from "../../../hook/utils/addr.js"
+import { hookCommon } from "./common.js"
 import { hookExprSyntaxTree } from "./expr_syntax_tree.js"
 import { hookBase } from "./hook_base.js"
 import { hookBNF } from "./hook_bnf.js"
@@ -11,7 +12,8 @@ export const hookExprLib = (baseAddr: BaseAddr) => {
     hookParser(baseAddr)
     hookExprSyntaxTree(baseAddr)
     hookTokenizer(baseAddr)
-    hookToken(baseAddr)
+    hookCommon(baseAddr)
+    // hookToken(baseAddr)
     // hookTransitTable(baseAddr)
     // hookTransitTable2(baseAddr)
     // hookBase(baseAddr)

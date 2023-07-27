@@ -1,10 +1,26 @@
 const { spawn, spawnSync, exec, execSync } = require("child_process");
+const fs = require('fs');
 (async () => {
     console.log('start')
-    const wccTask = spawnSync('d:\\Work\\disassembly\\wcc-exec\\wcc\\wcc-sleep.exe', ["--config-path", "d:/Work/disassembly/wcc-exec/wcc/cmd1.txt"], {
-        cwd: '/mnt/d/Work/WeChatProjects/miniprogram-demo/miniprogram'
+    const wccTask = spawn('d:\\Work\\disassembly\\wcc-exec\\wcc\\wcc-sleep.exe', ["--config-path", "d:/Work/disassembly/wcc-exec/wcc/config/cmd2.txt"], {
+        cwd: 'd:/Work/WeChatProjects/miniprogram-demo/miniprogram'
     })
-    console.log('end')
+    wccTask.stdout.on('data', (d) => {
+        // console.log(d.toString())
+    })
+    const hookTask = spawn('python', ['-u', "d:\\Work\\disassembly\\hook\\wcc.py"])
+    // const f = fs.openSync('output.log', 'w')
+    hookTask.stdout.on('data', (d) => {
+        console.log(d.toString())
+        // fs.writeSync(f, d.toString())
+    })
+    // console.log('end')
+    hookTask.on('exit', () => {
+        // fs.closeSync(f)
+    })
+    wccTask.on('exit', () => {
+        hookTask.stdin.write("\n");
+    })
     // wccTask.on('error', (res) => {
     //     console.log(res)
     // })

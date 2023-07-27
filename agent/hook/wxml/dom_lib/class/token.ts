@@ -22,6 +22,16 @@ export const stdMapString2DomLibToken = (addr: NativePointer) => {
     }).toJSON()
 }
 
+export const stdVectorDomLibToken = (addr: NativePointer) => {
+    return new StdVector(addr, {
+        elementSize: 112,
+        introspectElement: (ptr) => {
+            
+            return new Token(ptr).toJSON()
+        }
+    }).toJSON()
+}
+
 export default class Token {
     
     private addr: NativePointer

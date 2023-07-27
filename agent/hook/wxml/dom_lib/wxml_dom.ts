@@ -192,6 +192,7 @@ export const hookWxmlDom = (baseAddr: BaseAddr) => {
     //         });
     //     }
     // }
+    
     // {
     //     const funcName = 'WXML::DOMLib::WXMLDom::RenderAllOpsAndRecord(std::string const& a2, std::string& a3,std::stringstream & a4,std::map<std::string,WXML::DOMLib::RVMOpCodePosition> & a5, WXML::DOMLib::RVMOpCodePositionRecorder * a6, bool a7, std::map const<std::string,std::string> &a8)'
     //     const targetAddr = baseAddr.resolveAddress('0x00423B6C')
@@ -255,6 +256,7 @@ export const hookWxmlDom = (baseAddr: BaseAddr) => {
     //         });
     //     }
     // }
+
     // {
     //     const funcName = 'WXML::DOMLib::WXMLDom::RewriteTree(void)'
     //     const targetAddr = baseAddr.resolveAddress('0x0042060C')
@@ -362,6 +364,67 @@ export const hookWxmlDom = (baseAddr: BaseAddr) => {
     //                 // if (arg.arg10) {
     //                 //     console.log('[+] Argv10: ', stdMapString2StringParse(arg.arg10));
     //                 // }
+    //                 console.log(`${funcName} - onLeave\n\n`);
+    //             }
+    //         });
+    //     }
+    // }
+
+    // {
+    //     const funcName = 'WXML::DOMLib::WXMLDom::RecordAllPath(void)'
+    //     const targetAddr = baseAddr.resolveAddress('0x0042270E')
+    //     // ReadFile
+    //     if (targetAddr != null) {
+    //         const arg: any = {
+
+    //         }
+    //         let i = 0
+    //         Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
+
+    //             // When function is called, print out its parameters
+    //             /*
+    //             以下内容演示了
+    //             1. 怎么提取 printf 的第一个参数的字符串
+    //             2. 怎么结合 onLever 做进入函数的时候获取 该函数要操作的内存和长度 ，等函数工作完毕，提取该数据
+    //             其他API 用法
+    //             https://frida.re/docs/javascript-api/
+    //             */
+    //             onEnter: function (args) {
+    //                 try {
+                        
+    //                     console.log(`${funcName} - onEnter`);
+    //                     console.log('[+] Called targetAddr:' + targetAddr);
+    //                     // console.log('[+] Ctx: ' + args[-1]);
+    //                     // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
+    //                     const ctx = this.context as any
+    //                     const ecx = ctx.ecx
+    //                     i++
+    //                     if (i == 1) {
+    //                         const wxmlDom = new WxmlDom(ecx).toJSON()
+    //                         console.log('dom:', JSON.stringify(wxmlDom, null, 4))
+    //                     }
+
+    //                 } catch (error) {
+    //                     console.log('error:', error)
+    //                 }
+                    
+    //                 /*
+    //                 dumpAddr('Input', args[0], args[3].toInt32());
+    //                 this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
+    //                 this.outsize = args[2].toInt32();
+    //                 */
+    //             },
+
+    //             // When function is finished
+    //             onLeave: function (retval) {
+    //                 /*
+    //                 dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
+    //                 console.log('[+] Returned from SomeFunc: ' + retval);
+    //                 */
+    //                 // if (arg.arg10) {
+    //                 //     console.log('[+] Argv10: ', stdMapString2StringParse(arg.arg10));
+    //                 // }
+    //                 i--
     //                 console.log(`${funcName} - onLeave\n\n`);
     //             }
     //         });

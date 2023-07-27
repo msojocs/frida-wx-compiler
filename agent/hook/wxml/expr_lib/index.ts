@@ -16,6 +16,6 @@ export const hookExprLib = (baseAddr: BaseAddr) => {
     // hookToken(baseAddr)
     // hookTransitTable(baseAddr)
     // hookTransitTable2(baseAddr)
-    // hookBase(baseAddr)
+    hookBase(baseAddr)
     // hookBNF(baseAddr)
 }

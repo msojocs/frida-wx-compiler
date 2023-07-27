@@ -1,13 +1,14 @@
-import { StdString } from "../../../cpp/std_string.js";
-import BaseAddr from "../../../hook/utils/addr.js";
-import { stdVectorExprLibToken } from "./class/token.js";
+import type BaseAddr from "../utils/addr.js";
+import { StdString } from '../../cpp/std_string.js'
+import StdVector, { stdVectorStringParse } from "../../cpp/std_vector.js";
+import StdMap, { stdMapString2IntParse, stdMapString2StringParse, stdMapString2VectorStringParse } from "../../cpp/std_map.js";
+import NSNode from "./class/ns_node.js";
 
-export const hookTokenizer = (baseAddr: BaseAddr) => {
-    let tokenList: NativePointer
+export const hookNSCompileJs = (baseAddr: BaseAddr) => {
+    
     {
-        const funcName = 'WXML::EXPRLib::Tokenizer::GetTokens(std::vector<WXML::EXPRLib::Token> &,std::string &)'
-        const targetAddr = baseAddr.resolveAddress('0x0042EEC8')
-        // ReadFile
+        const funcName = 'night::NSCompileJs::compile_once(std::string & a3, std::vector<std::string> *a4, bool a5)'
+        const targetAddr = baseAddr.resolveAddress('0x0041C7CC')
         if (targetAddr != null) {
             const arg: Record<string, NativePointer> = {}
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
@@ -22,20 +23,19 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        
                         console.log(`${funcName} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
-                        // console.log('arg0:', readStdString(args[0]))
-                        // console.log('[+] Argv0: ', args[0].readUtf8String())
-                        arg.a2 = args[0]
-                        tokenList = arg.a2
                         arg.a3 = args[1]
+                        console.log('[+] a3: ', args[1], new StdString(args[1]).toString())
+                        console.log('[+] a4: ', args[2], stdVectorStringParse(args[2]));
+                        console.log('[+] a5: ', args[3], args[3]);
+                        
+                        // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
                     } catch (error) {
                         console.log('error:', error)
                     }
-                    
                     /*
                     dumpAddr('Input', args[0], args[3].toInt32());
                     this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -49,9 +49,11 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    if (arg.a2) {
-                        console.log(JSON.stringify(stdVectorExprLibToken(arg.a2), null, 4))
+                    if (arg.a3) {
+                        console.log('[+] a3: ', new StdString(arg.a3).toString())
                     }
+                    console.log('retval:', retval)
+                    console.log('content:', new StdString(retval).toString())
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });

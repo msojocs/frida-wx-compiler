@@ -118,9 +118,9 @@ export const stdMapString2IntParse = (p: NativePointer) => {
                 result.key = new StdString(keyPtr).toString() || ''
             if (valuePtr.readU32() > 0)
                 result.value = valuePtr.readU32()
-            return JSON.stringify(result, null, 4) + ',\n'
+            return result
         }
-    }).toString()
+    }).toJSON()
 }
 
 /**

@@ -4,11 +4,13 @@ import { hookMachine } from "./machine.js"
 import { hookParser } from "./parser.js"
 import { hookTokenizer } from "./tokenizer.js"
 import { hookWxmlDom } from "./wxml_dom.js"
+import { hookStrCache } from "./str_cache.js"
 
 export const hookDomLib = (baseAddr: BaseAddr) => {
-    // hookParser(baseAddr)
+    hookParser(baseAddr)
     // hookTokenizer(baseAddr)
     // hookMachine(baseAddr)
     // hookToken(baseAddr)
     hookWxmlDom(baseAddr)
+    // hookStrCache(baseAddr)
 }

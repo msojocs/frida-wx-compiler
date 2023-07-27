@@ -8,9 +8,9 @@ import { hookVector } from "./vector/index.js"
 
 export const hookCPP = (baseAddr: BaseAddr) => {
     hookMap(baseAddr)
-    hookVector(baseAddr)
-    hookStdString(baseAddr)
-    hookOther(baseAddr)
-    hookStringStream(baseAddr)
-    hookDeque(baseAddr)
+    // hookVector(baseAddr)
+    // hookStdString(baseAddr)
+    // hookOther(baseAddr)
+    // hookStringStream(baseAddr)
+    // hookDeque(baseAddr)
 }

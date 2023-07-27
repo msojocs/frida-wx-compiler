@@ -1,14 +1,16 @@
 import { StdString } from "../../../cpp/std_string.js";
 import BaseAddr from "../../../hook/utils/addr.js";
-import Token, { stdVectorDomLibToken } from "./class/token.js";
+import StrCache from "./class/str_cache.js";
+import Token from "./class/token.js";
 
-export const hookTokenizer = (baseAddr: BaseAddr) => {
+export const hookStrCache = (baseAddr: BaseAddr) => {
   
     {
-        const funcName = 'WXML::DOMLib::Tokenizer::Tokenizer'
-        const targetAddr = baseAddr.resolveAddress('0x42B0EE')
+        const funcName = 'WXML::DOMLib::StrCache::Insert(std::string)'
+        const targetAddr = baseAddr.resolveAddress('0x00471B54')
         // ReadFile
         if (targetAddr != null) {
+            let ecx: NativePointer
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -24,11 +26,13 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                         
                         console.log(`${funcName} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        // console.log('[+] Argv0: ', args[0].readUtf8String())
-                        console.log('[+] Argv1: ', new StdString(args[1]).toString());
+                        console.log('[+] Argv0: ', new StdString(args[0]).toString() || '')
+                        const ctx = this.context as any
+                        ecx = ctx.ecx
+                        console.log('data:', JSON.stringify(new StrCache(ecx).toJSON(), null, 4))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -46,16 +50,20 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    if (ecx) {
+                        console.log('data:', JSON.stringify(new StrCache(ecx).toJSON(), null, 4))
+                    }
+                    console.log('retval:', retval)
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });
         }
     }
     {
-        const funcName = 'WXML::DOMLib::Tokenizer::GetTokens(std::vector<WXML::DOMLib::Token> & a2,std::string & a3,std::vector<WXML::DOMLib::Token> &a4)'
-        const targetAddr = baseAddr.resolveAddress('0x42AFB8')
+        const funcName = 'WXML::DOMLib::StrCache::RenderPathDefine(std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>> &)'
+        const targetAddr = baseAddr.resolveAddress('0x00471AB8')
+        // ReadFile
         if (targetAddr != null) {
-            let arg: Record<string, NativePointer> = {}
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -71,13 +79,13 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                         
                         console.log(`${funcName} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])
-                        console.log('[+] Argv1: ', new StdString(args[1]).toString());
-                        console.log('[+] Argv2: ', args[2]);
-                        arg.a2 = args[0]
+                        const ctx = this.context as any
+                        const ecx = ctx.ecx
+                        console.log('data:', JSON.stringify(new StrCache(ecx).toJSON(), null, 4))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -96,8 +104,6 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
                     console.log('retval:', retval)
-                    if (arg.a2)
-                        console.log('[+] a2: ', JSON.stringify(stdVectorDomLibToken(arg.a2), null, 4));
                     console.log(`${funcName} - onLeave\n\n`);
                 }
             });

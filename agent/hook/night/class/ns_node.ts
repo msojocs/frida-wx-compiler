@@ -46,9 +46,17 @@ export default class NSNode {
         return new StdString(this.addr.add(156)).toString() || ''
     }
     get offset_180() {
+        const ptr = this.addr.add(180).readPointer()
+        if (ptr.toInt32() != 0) {
+            return new NSNode(ptr).toJSON()
+        }
         return this.addr.add(180).readPointer()
     }
     get offset_184() {
+        const ptr = this.addr.add(184).readPointer()
+        if (ptr.toInt32() != 0) {
+            return new NSNode(ptr).toJSON()
+        }
         return this.addr.add(184).readPointer()
     }
     get offset_188() {
@@ -107,6 +115,23 @@ export default class NSNode {
         return vecPtr
     }
     get offset_228() {
+        const ptr = this.addr.add(228).readPointer()
+        if (ptr.toInt32() != 0) {
+            return new StdVector(ptr, {
+                elementSize: 4,
+                introspectElement: (ptr2) => {
+                    try {
+                        return new NSNode(ptr2.readPointer()).toJSON()
+                    } catch (error) {
+                        return [
+                            'error:',
+                            ptr2.readPointer().readPointer(),
+                            ptr2.readPointer().add(4).readPointer(),
+                        ]
+                    }
+                }
+            }).toJSON()
+        }
         return this.addr.add(228).readPointer()
     }
     get offset_232() {
@@ -130,10 +155,10 @@ export default class NSNode {
             offset_188: this.offset_188,
             offset_192: this.offset_192,
             offset_196: this.offset_196,
-            // offset_200: this.offset_200,
-            // offset_224: this.offset_224,
-            // offset_228: this.offset_228,
-            // offset_232: this.offset_232,
+            offset_200: this.offset_200,
+            offset_224: this.offset_224,
+            offset_228: this.offset_228,
+            offset_232: this.offset_232,
         }
     }
 }

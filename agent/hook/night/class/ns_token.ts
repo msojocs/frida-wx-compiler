@@ -34,8 +34,14 @@ export default class NSToken {
         //     ptr.readPointer()
         // ]
     }
-    get offset_12() {
-        return this.addr.add(12).readPointer()
+    get offset_12(): Record<string, any> {
+        return new StdVector(this.addr.add(12), {
+            elementSize: 4,
+            introspectElement: (ptr) => {
+                return new NSToken(ptr.readPointer()).toJSON();
+            },
+        }).toJSON()
+        // return this.addr.add(12).readPointer()
     }
     get offset_24() {
         return stdMapString2IntParse(this.addr.add(24))
@@ -44,8 +50,8 @@ export default class NSToken {
     toJSON() {
         return {
             type: 'NSToken',
-            offset_0: this.offset_0,
-            offset_4: this.offset_4,
+            // offset_0: this.offset_0,
+            // offset_4: this.offset_4,
             offset_8: this.offset_8,
             offset_12: this.offset_12,
             offset_24: this.offset_24,

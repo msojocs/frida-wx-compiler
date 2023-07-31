@@ -31,6 +31,11 @@ export default class NSASTParse {
     }
     get offset_44() {
         return new StdString(this.addr.add(44)).toString() || ''
+        // const ptr = this.addr.add(44)
+        // return [
+        //     ptr.readPointer(),
+        //     ptr.add(4).readPointer(),
+        // ]
     }
     get offset_60() {
         return new StdString(this.addr.add(60)).toString() || ''

@@ -6,7 +6,7 @@ import { hookWXML } from "./wxml/index.js";
 
 export const hook = (baseAddr: BaseAddr) => {
     // hookCPP(baseAddr)
-    // hookWXML(baseAddr)
+    hookWXML(baseAddr)
     // hookWcc(baseAddr)
-    hookNight(baseAddr)
+    // hookNight(baseAddr)
 }

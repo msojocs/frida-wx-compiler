@@ -11,5 +11,5 @@ export const hookNight = (baseAddr: BaseAddr) => {
     // hookNSCompileJs(baseAddr)
     // hookNSStream(baseAddr)
     // hookNSGod(baseAddr)
-    // hookNSToken(baseAddr)
+    hookNSToken(baseAddr)
 }

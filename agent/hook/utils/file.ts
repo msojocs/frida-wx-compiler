@@ -1,12 +1,13 @@
 
-import BaseAddr from "../utils/addr.js"
+import BaseAddr from "./addr.js"
 
 export const hookReadFile = (baseAddr: BaseAddr) => {
 
     {
         // ReadFile(char *FileName, int a2)
         let fileContentPtr: NativePointer | null
-        const targetAddr = baseAddr.resolveAddress('0x4017E0')
+        // const targetAddr = baseAddr.resolveAddress('0x4017e0')
+        const targetAddr = baseAddr.resolveFunctionAddress('ReadFile(char const*,std::string &)')
         // ReadFile
         if (targetAddr != null) {
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
@@ -24,7 +25,7 @@ export const hookReadFile = (baseAddr: BaseAddr) => {
                         
                         console.log('ReadFile - onEnter');
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] Argv0: ', args[0])

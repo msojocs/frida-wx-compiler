@@ -1,6 +1,6 @@
 import BaseAddr from "../utils/addr.js"
 import { hookUsage } from "./usage.js"
-import { hookReadFile } from "./file.js"
+import { hookReadFile } from "../utils/file.js"
 import { hookCommon } from "./common.js"
 
 export const hookWcc = (baseAddr: BaseAddr) => {

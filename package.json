@@ -8,13 +8,14 @@
     "prepare": "npm run build",
     "build": "frida-compile agent/index.ts -o _agent.js -c",
     "watch": "frida-compile agent/index.ts -o _agent.js -w",
-    "hook": "node run.js > output.log"
+    "hook-wcc": "node wcc.js > output.log",
+    "hook-wcsc": "node wcsc.js > output.log"
   },
   "devDependencies": {
     "@types/frida-gum": "^18.3.2",
     "@types/node": "^20.3.1",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.27.5",
-    "frida-compile": "^16.2.2"
+    "frida-compile": "^16.3.0"
   }
 }

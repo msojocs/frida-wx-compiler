@@ -18,8 +18,8 @@ devDependencies:
     specifier: ^2.27.5
     version: 2.27.5(eslint@8.43.0)
   frida-compile:
-    specifier: ^16.2.2
-    version: 16.2.2
+    specifier: ^16.3.0
+    version: 16.3.0
 
 packages:
 
@@ -779,8 +779,8 @@ packages:
       is-callable: 1.2.7
     dev: true
 
-  /frida-compile@16.2.2:
-    resolution: {integrity: sha512-Xos5fFCdcJRdr20tNvwLUQoqf08oDc0ptAgOK+ZKoBjvcXBI9fFslN6B+jtUP3St78IWwAKMgHmwDv1ZY8G6Ug==}
+  /frida-compile@16.3.0:
+    resolution: {integrity: sha512-WpnvUzQtWnc8xPnFmmYCajJKzyKQLM/QEOvasgFYTjaXNfDJHjrHIDxgx/ZXSNidmxK3FZofs+LsuGMq9wEqqA==}
     hasBin: true
     dependencies:
       '@frida/assert': 3.0.2

@@ -10,7 +10,7 @@ export const hookDomLib = (baseAddr: BaseAddr) => {
     // hookParser(baseAddr)
     // hookTokenizer(baseAddr)
     // hookMachine(baseAddr)
-    hookToken(baseAddr)
-    // hookWxmlDom(baseAddr)
+    // hookToken(baseAddr)
+    hookWxmlDom(baseAddr)
     // hookStrCache(baseAddr)
 }

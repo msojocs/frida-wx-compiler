@@ -11,6 +11,7 @@
     "esModuleInterop": false,
     "moduleResolution": "nodenext",
     "strict": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "baseUrl": "./",
     "paths": {

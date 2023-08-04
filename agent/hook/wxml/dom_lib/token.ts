@@ -268,9 +268,9 @@ export const hookToken = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        
-                        console.log(`${funcName} - onEnter${++i}`);
+                        ++i
                         this.index = i
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext

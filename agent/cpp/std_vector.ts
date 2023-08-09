@@ -104,3 +104,11 @@ export const stdVectorStringParse = (p: NativePointer) => {
 		elementSize: 24,
 	}).toString()
 }
+export const stdVectorStringParseJSON = (p: NativePointer) => {
+	return new StdVector(p, {
+		introspectElement(p) {
+			return new StdString(p).toString() || 'empty'
+		},
+		elementSize: 24,
+	}).toJSON()
+}

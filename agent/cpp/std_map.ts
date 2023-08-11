@@ -102,6 +102,27 @@ export const stdMapString2StringParse = (p: NativePointer) => {
         }
     }).toString()
 }
+
+export const stdMapString2StringParseJSON = (p: NativePointer) => {
+    return new StdMap(p, {
+        inspectElement(ptr) {
+            // console.log('data:', ptr.readU64().toString(16))
+            const keyPtr = ptr.add(16)
+            const valuePtr = keyPtr.add(24)
+            // console.log('key:', keyPtr)
+            // console.log('value:', valuePtr)
+            const result = {
+                key: '',
+                value: '',
+            }
+            if (keyPtr.readU32() > 0)
+                result.key = new StdString(keyPtr).toString() || ''
+            if (valuePtr.readU32() > 0)
+                result.value = new StdString(valuePtr).toString() || ''
+            return result
+        }
+    }).toJSON()
+}
 export const stdMapString2IntParse = (p: NativePointer) => {
     return new StdMap(p, {
         inspectElement(ptr) {

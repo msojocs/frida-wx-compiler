@@ -1,5 +1,5 @@
 import StdVector from "../../../cpp/std_vector.js"
-import StdMap, { stdMapString2StringParse, stdMapString2VectorStringParse, stdMapString2VectorStringParseJSON } from "../../../cpp/std_map.js"
+import StdMap, { stdMapString2IntParse, stdMapString2StringParse, stdMapString2StringParseJSON, stdMapString2VectorStringParse, stdMapString2VectorStringParseJSON } from "../../../cpp/std_map.js"
 import { StdString } from "../../../cpp/std_string.js"
 
 export default class XCompiler {
@@ -32,6 +32,12 @@ export default class XCompiler {
     get offset_56() {
         return stdMapString2VectorStringParseJSON(this.addr.add(56))
     }
+    get offset_128() {
+        return stdMapString2IntParse(this.addr.add(128))
+    }
+    get offset_152() {
+        return stdMapString2StringParseJSON(this.addr.add(152))
+    }
     toJSON() {
         return {
             offset_0: this.offset_0,
@@ -39,6 +45,8 @@ export default class XCompiler {
             offset_8: this.offset_8,
             offset_32: this.offset_32,
             offset_56: this.offset_56,
+            offset_128: this.offset_128,
+            offset_152: this.offset_152,
         }
     }
 }

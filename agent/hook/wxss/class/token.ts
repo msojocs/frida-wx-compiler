@@ -13,24 +13,18 @@ export default class WXSSToken {
     }
     get offset_4() {
         // return new StdString(this.addr.add(4).readPointer()).toString()
-        if (this.addr.add(4).readInt() > 0)
+        const ptr = this.addr.add(4)
+        if (ptr.readInt() > 0)
         {
-            return [
-                this.addr.add(4).readPointer(),
-                this.addr.add(4).readPointer().readPointer(),
-                this.addr.add(4).readPointer().add(4).readPointer(),
-                this.addr.add(8).readPointer(),
-                this.addr.add(8).readPointer().readPointer(),
-                this.addr.add(8).readPointer().add(4).readPointer(),
-            ]
+            return new StdString(ptr.readPointer()).toString()
         }
-        return [
-            this.addr.add(4).readPointer(),
-            this.addr.add(8).readPointer(),
-        ]
+        return ''
     }
     get offset_12() {
         return this.addr.add(12).readInt()
+    }
+    get offset_16() {
+        return this.addr.add(16).readInt()
     }
     get offset_20() {
         return this.addr.add(20).readInt()
@@ -38,13 +32,18 @@ export default class WXSSToken {
     get offset_24() {
         return this.addr.add(24).readInt()
     }
+    get offset_28() {
+        return this.addr.add(28).readUtf8String()
+    }
     toJSON() {
         return {
             offset_0: this.offset_0,
             offset_4: this.offset_4,
             offset_12: this.offset_12,
+            offset_16: this.offset_16,
             offset_20: this.offset_20,
             offset_24: this.offset_24,
+            offset_28: this.offset_28,
         }
     }
 }

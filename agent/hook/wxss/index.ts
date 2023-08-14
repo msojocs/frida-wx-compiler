@@ -6,8 +6,8 @@ import { hookTokenizer } from "./tokenizer.js";
 import { hookXCompiler } from "./x_compiler.js";
 
 export const hookWXSS = (baseAddr: BaseAddr) => {
-    // hookCSSTreeLib(baseAddr)
-    hookXCompiler(baseAddr)
+    hookCSSTreeLib(baseAddr)
+    // hookXCompiler(baseAddr)
     // hookToken(baseAddr)
     // hookCommon(baseAddr)
     // hookTokenizer(baseAddr)

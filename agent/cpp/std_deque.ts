@@ -17,7 +17,7 @@ export default class StdDeque {
     private addr
     private valueSize
     private introspectElement
-	constructor(addr: NativePointer, valueSize: number, introspectElement: (p: NativePointer) => string) {
+	constructor(addr: NativePointer, valueSize: number, introspectElement: (p: NativePointer) => any) {
 		this.addr = addr;
 		this.valueSize = valueSize;
 		this.introspectElement = introspectElement;
@@ -74,6 +74,13 @@ export default class StdDeque {
 				+ ", offset=" + this.iteratorStart
 				+ ", size=" + this.iteratorFinish
 				+ ", contents: " + this.contents + "}";
+	}
+	
+	toJSON() {
+		return {
+			type: 'std::deque',
+			contents: this.contents,
+		}
 	}
 }
 

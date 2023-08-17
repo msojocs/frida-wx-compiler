@@ -1,6 +1,7 @@
 import { StdString } from "../../../cpp/std_string.js";
 import BaseAddr from "../../utils/addr.js";
 import CSSSyntaxTree from "../class/css_syntax_tree.js";
+import WXSSParser from "./class/parser.js";
 
 export const hookParser = (baseAddr: BaseAddr) => {
     
@@ -39,6 +40,8 @@ export const hookParser = (baseAddr: BaseAddr) => {
                         this.ecx = ecx
                         this.a4 = args[2]
                         this.a5 = args[3]
+                        // const t = new WXSSParser(this.ecx).toJSON()
+                        // console.log('this:', JSON.stringify(t, null, 4))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -57,8 +60,8 @@ export const hookParser = (baseAddr: BaseAddr) => {
                     */
                     console.log('retval:', retval)
                     if (this.ecx) {
-                        // const t = new CSSSyntaxTree(this.ecx).toJSON()
-                        // console.log('this:', JSON.stringify(t, null, 4))
+                        const t = new WXSSParser(this.ecx).toJSON()
+                        console.log('this:', JSON.stringify(t, null, 4))
                     }
                     if (this.a4) {
                         console.log('a4:', new StdString(this.a4).toString())

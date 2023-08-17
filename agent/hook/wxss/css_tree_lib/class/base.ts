@@ -17,6 +17,9 @@ export default class WXSSBase {
     get offset_4_int() {
         return this.addr.add(4).readInt()
     }
+    get offset_8() {
+        return this.addr.add(8).readPointer()
+    }
     get offset_28() {
         return this.addr.add(28).readInt()
     }
@@ -32,6 +35,7 @@ export default class WXSSBase {
             case '0x519b58':
             case '0x519b2c':
                 return {
+                    type: 'base',
                     offset_0: this.offset_0,
                     offset_4: this.offset_4,
                     offset_28: this.offset_28,
@@ -41,17 +45,21 @@ export default class WXSSBase {
                 break;
             case '0x519a44':
                 return {
+                    type: 'base',
                     offset_0: this.offset_0,
                     offset_4: this.offset_4_int,
+                    offset_8: this.offset_8,
                 }
                 break;
             case '0x519b18':
                 return {
+                    type: 'base',
                     offset_0: this.offset_0,
                 }
                 break;
             default:
                 return {
+                    type: 'base',
                     offset_0: this.offset_0,
                     error: 'not supported!'
                 }

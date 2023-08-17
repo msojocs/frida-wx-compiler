@@ -10,7 +10,7 @@ import { hookTransitTable } from "./transit_table.js";
 
 export const hookCSSTreeLib = (baseAddr: BaseAddr) => {
     // hookLexicalChecker(baseAddr)
-    // hookCSSSyntaxTree(baseAddr)
-    hookParser(baseAddr)
+    hookCSSSyntaxTree(baseAddr)
+    // hookParser(baseAddr)
     // hookTransitTable(baseAddr)
 }

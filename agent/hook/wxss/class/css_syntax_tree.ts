@@ -23,6 +23,7 @@ export default class CSSSyntaxTree {
         elementSize: 8,
         introspectElement: (ptr) => {
             return new CSSSyntaxTree(ptr.readPointer()).toJSON()
+            // return ''
         }
        }).toJSON()
     }
@@ -39,26 +40,26 @@ export default class CSSSyntaxTree {
     get offset_148() {
         // std::shared_ptr<>
         const cur = this.addr.add(148).readPointer()
-        if (cur.readInt() > 0)
+        if (cur.toInt32() > 0)
             return [
                 new StdString(cur).toString(),
                 new StdString(cur.add(24)).toString(),
                 new StdString(cur.add(48)).toString(),
             ]
         else
-            return this.addr.add(148).readPointer()
+            return []
     }
     get offset_156() {
         return this.addr.add(156).readPointer()
     }
-    // get offset_164() {
-    //     return this.addr.add(164).readInt()
-    // }
-    // get offset_168() {
-    //     return this.addr.add(168).readInt()
-    // }
-    get offset_172() {
+    get offset_164() {
+        return this.addr.add(164).readInt()
+    }
+    get offset_168() {
         return this.addr.add(168).readInt()
+    }
+    get offset_172() {
+        return this.addr.add(172).readInt()
     }
     toJSON() {
         return {
@@ -67,14 +68,14 @@ export default class CSSSyntaxTree {
             offset_24: this.offset_24,
             offset_116: this.offset_116,
             // vec ok
-            // offset_120: this.offset_120,
-            offset_132: this.offset_132,
-            offset_140: this.offset_140,
-            offset_148: this.offset_148,
-            offset_156: this.offset_156,
+            offset_120: this.offset_120,
+            // offset_132: this.offset_132,
+            // offset_140: this.offset_140,
+            // offset_148: this.offset_148,
+            // offset_156: this.offset_156,
             // offset_164: this.offset_164,
             // offset_168: this.offset_168,
-            offset_172: this.offset_172,
+            // offset_172: this.offset_172,
         }
     }
 }

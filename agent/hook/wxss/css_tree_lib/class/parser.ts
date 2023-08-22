@@ -24,7 +24,7 @@ export default class WXSSParser {
         }).toJSON()
     }
     get offset_48() {
-        return new StdDeque(this.addr.add(8), 8, (ptr) => {
+        return new StdDeque(this.addr.add(48), 8, (ptr) => {
             return new CSSSyntaxTree(ptr.readPointer()).toJSON()
         }).toJSON()
     }

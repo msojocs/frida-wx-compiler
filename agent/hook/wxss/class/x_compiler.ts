@@ -1,6 +1,7 @@
 import StdVector from "../../../cpp/std_vector.js"
 import StdMap, { stdMapString2IntParse, stdMapString2StringParse, stdMapString2StringParseJSON, stdMapString2VectorStringParse, stdMapString2VectorStringParseJSON } from "../../../cpp/std_map.js"
 import { StdString } from "../../../cpp/std_string.js"
+import CSSSyntaxTree from "./css_syntax_tree.js"
 
 export default class XCompiler {
     
@@ -24,7 +25,7 @@ export default class XCompiler {
                 const valuePtr = keyPtr.add(24)
                 return {
                     key: new StdString(keyPtr).toString() || '',
-                    value: 'std::shared_ptr<WXSS::CSSTreeLib::CSSSyntaxTree>'
+                    value: new CSSSyntaxTree(valuePtr.readPointer()).toJSON()
                 }
             }
         }).toJSON()

@@ -34,10 +34,10 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
     //                     // console.log('[+] Ctx: ' + args[-1]);
     //                     // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
     //                     // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
-    //                     console.log('[+] a2:', args[0].readUtf8String(4));
-    //                     console.log('[+] a3:', args[1]);
-    //                     console.log('[+] a4:', args[2]);
-    //                     console.log('[+] a5:', args[3]);
+    //                     console.log('[+] a1:', args[0].readUtf8String(4));
+    //                     console.log('[+] a2:', args[1]);
+    //                     console.log('[+] a3:', args[2]);
+    //                     console.log('[+] a4:', args[3]);
     //                     const ctx = this.context as any as Record<string, NativePointer>
     //                     const ecx = ctx.ecx
     //                 } catch (error) {
@@ -56,6 +56,9 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
     //                 dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
     //                 console.log('[+] Returned from SomeFunc: ' + retval);
     //                 */
+    //                 if (retval.toInt32() > 0) {
+    //                     console.log('retval:', retval)
+    //                 }
     //                 if (this.index > 10) return
     //                 console.log('retval:', retval)
     //                 console.log(`${funcName} - onLeave\n\n`);
@@ -85,7 +88,7 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                     try {
                         ++i
                         this.index = i
-                        console.log(`${funcName} - onEnter`);
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
@@ -139,7 +142,7 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                         console.log('[+] a3:', new StdString(this.a3).toString());
                     if (this.a4)
                         console.log('[+] a4:', this.a4);
-                    console.log(`${funcName} - onLeave\n\n`);
+                    console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });
         }

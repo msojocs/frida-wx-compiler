@@ -1,12 +1,13 @@
+import Base from "./class/base.js";
 import { StdString } from "../../../cpp/std_string.js";
 import BaseAddr from "../../utils/addr.js";
 import CSSSyntaxTree from "../class/css_syntax_tree.js";
 import WXSSParser from "./class/parser.js";
 
-export const hookParser = (baseAddr: BaseAddr) => {
+export const hookBase = (baseAddr: BaseAddr) => {
     
     {
-        const funcName = 'WXSS::CSSTreeLib::Parser::Parse(std::string const&,std::string const&,std::string&,std::string const&)'
+        const funcName = 'std::deque<zcc::shared_ptr<WXSS::CSSTreeLib::Base>>::push_back(zcc::shared_ptr<WXSS::CSSTreeLib::Base> const&)'
         const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         // ReadFile
         if (targetAddr != null) {
@@ -31,19 +32,16 @@ export const hookParser = (baseAddr: BaseAddr) => {
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
-                        // console.log('[+] a2:', new StdString(args[0]).toString());
-                        console.log('[+] a3:', new StdString(args[1]).toString());
-                        console.log('[+] a4:', new StdString(args[2]).toString());
-                        console.log('[+] a5:', new StdString(args[3]).toString());
+                        const base = new Base(args[0].readPointer()).toJSON()
+                        console.log('[+] a2:', JSON.stringify(base, null, 4));
+                        
                         const ctx = this.context as any as Record<string, NativePointer>
                         const ecx = ctx.ecx
                         this.ecx = ecx
-                        this.a4 = args[2]
-                        this.a5 = args[3]
-                        // if (this.ecx) {
-                        //     const t = new WXSSParser(this.ecx).toJSON()
-                        //     console.log('this:', JSON.stringify(t, null, 4))
-                        // }
+                        if (this.ecx) {
+                            // const t = new WXSSParser(this.ecx).toJSON()
+                            // console.log('this:', JSON.stringify(t, null, 4))
+                        }
                         // const t = new WXSSParser(this.ecx).toJSON()
                         // console.log('this:', JSON.stringify(t, null, 4))
                     } catch (error) {
@@ -64,14 +62,8 @@ export const hookParser = (baseAddr: BaseAddr) => {
                     */
                     console.log('retval:', retval)
                     if (this.ecx) {
-                        const t = new WXSSParser(this.ecx).toJSON()
-                        console.log('this:', JSON.stringify(t, null, 4))
-                    }
-                    if (this.a4) {
-                        console.log('a4:', new StdString(this.a4).toString())
-                    }
-                    if (this.a5) {
-                        console.log('a5:', new StdString(this.a5).toString())
+                        // const t = new WXSSParser(this.ecx).toJSON()
+                        // console.log('this:', JSON.stringify(t, null, 4))
                     }
                     console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }

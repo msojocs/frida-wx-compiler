@@ -7,12 +7,14 @@ import { hookBase } from "./base.js";
 import { hookCSSSyntaxTree } from "./css_syntax_tree.js";
 import { hookLexicalChecker } from "./lexical_checker.js";
 import { hookParser } from "./parser.js";
+import { hookRule } from "./rule.js";
 import { hookTransitTable } from "./transit_table.js";
 
 export const hookCSSTreeLib = (baseAddr: BaseAddr) => {
-    // hookLexicalChecker(baseAddr)
+    hookLexicalChecker(baseAddr)
     // hookCSSSyntaxTree(baseAddr)
-    hookParser(baseAddr)
+    // hookParser(baseAddr)
     // hookBase(baseAddr)
     // hookTransitTable(baseAddr)
+    hookRule(baseAddr)
 }

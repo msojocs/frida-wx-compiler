@@ -2,6 +2,7 @@ import StdVector from "../../../cpp/std_vector.js"
 import StdMap, { stdMapString2IntParse, stdMapString2StringParse, stdMapString2StringParseJSON, stdMapString2VectorStringParse, stdMapString2VectorStringParseJSON } from "../../../cpp/std_map.js"
 import { StdString } from "../../../cpp/std_string.js"
 import WXSSToken from "./token.js"
+import Token from "../../../hook/wxml/dom_lib/class/token.js"
 
 export default class CSSSyntaxTree {
     
@@ -28,7 +29,12 @@ export default class CSSSyntaxTree {
        }).toJSON()
     }
     get offset_132() {
-        return this.addr.add(132).readInt()
+        const str = this.addr.add(132).readPointer()
+        if (str.toInt32() > 0)
+        {
+            return new StdString(str).toString()
+        }
+        return ""
     }
     get offset_140() {
         const str = this.addr.add(140)
@@ -50,7 +56,13 @@ export default class CSSSyntaxTree {
             return []
     }
     get offset_156() {
-        return this.addr.add(156).readPointer()
+        // return this.addr.add(156).readInt()
+        const token = this.addr.add(156).readPointer()
+        if (token.toInt32() > 0)
+        {
+            return new Token(token).toJSON()
+        }
+        return 
     }
     get offset_164() {
         return this.addr.add(164).readInt()
@@ -68,11 +80,11 @@ export default class CSSSyntaxTree {
             offset_24: this.offset_24,
             offset_116: this.offset_116,
             // vec ok
-            offset_120: this.offset_120,
-            // offset_132: this.offset_132,
+            // offset_120: this.offset_120,
+            offset_132: this.offset_132,
             // offset_140: this.offset_140,
             // offset_148: this.offset_148,
-            // offset_156: this.offset_156,
+            offset_156: this.offset_156,
             // offset_164: this.offset_164,
             // offset_168: this.offset_168,
             // offset_172: this.offset_172,

@@ -1,16 +1,13 @@
-import { StdString } from "../../../cpp/std_string.js";
-import BaseAddr from "../../utils/addr.js";
-import CSSSyntaxTree from "../class/css_syntax_tree.js";
+import type BaseAddr from "../utils/addr.js";
 
-export const hookCSSSyntaxTree = (baseAddr: BaseAddr) => {
-    
+export const hookRPX = (baseAddr: BaseAddr) => {
+
     {
-        const funcName = 'WXSS::CSSTreeLib::CSSSyntaxTree::RenderCode(std::string &,bool)'
+        const funcName = 'WXML::RPX::accept(int (*)[266],bool *,int &,char const*)'
         const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         // ReadFile
         if (targetAddr != null) {
-            let i = 0;
-            const argument: Record<string, NativePointer> = {}
+            let i = 0
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -23,27 +20,28 @@ export const hookCSSSyntaxTree = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        ++i
+                        i++
                         this.index = i
-                        if (this.index != 8962) return
+                        if (this.index > 10) return
                         console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        // console.log('[+] Ctx: ' + args[-1]);
+                        
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
+                        // console.log('arg0:', readStdString(args[0]))
+                        console.log('[+] a1:', args[0].readInt())
+                        console.log('[+] a2:', args[1])
+                        console.log('[+] a3:', args[2].readInt())
+                        console.log('[+] a4:', args[3].readUtf8String(10))
+                        this.a1 = args[0]
+                        this.a2 = args[1]
+                        this.a3 = args[2]
+                        this.a4 = args[3]
+                        
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
-                        console.log('[+] a2:', new StdString(args[0]).toString());
-                        console.log('[+] a3:', args[1]);
-                        this.a2 = args[0]
-                        const ctx = this.context as any as Record<string, NativePointer>
-                        const ecx = ctx.ecx
-                        this.ecx = ecx
-                        if (this.ecx) {
-                            const t = new CSSSyntaxTree(this.ecx).toJSON()
-                            console.log('this:', JSON.stringify(t, null, 4))
-                        }
                     } catch (error) {
                         console.log('error:', error)
                     }
+                    
                     /*
                     dumpAddr('Input', args[0], args[3].toInt32());
                     this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
@@ -53,14 +51,17 @@ export const hookCSSSyntaxTree = (baseAddr: BaseAddr) => {
 
                 // When function is finished
                 onLeave: function (retval) {
-                    /*
-                    dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
-                    console.log('[+] Returned from SomeFunc: ' + retval);
-                    */
-                    if (this.index != 8962) return
+                    if (this.index > 10) return
+
                     console.log('retval:', retval)
-                    if (this.a2)
-                        console.log('[+] a2:', new StdString(this.a2).toString());
+                    if (this.a1)
+                        console.log('[+] a1:', this.a1.readInt())
+                    // if (this.a2)
+                    //     console.log('[+] a2:', this.a2)
+                    if (this.a3)
+                        console.log('[+] a3:', this.a3.readInt())
+                    if (this.a4)
+                        console.log('[+] a4:', this.a4.readUtf8String(10))
                     console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });

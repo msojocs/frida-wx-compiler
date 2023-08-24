@@ -67,14 +67,14 @@ export default class Token {
     }
     toJSON() {
         return {
-            offset_0: this.offset_0,
-            offset_8: this.offset_8,
-            offset_12: this.offset_12,
-            offset_16: this.offset_16,
+            // offset_0: this.offset_0,
+            // offset_8: this.offset_8,
+            // offset_12: this.offset_12,
+            // offset_16: this.offset_16,
             offset_20: this.offset_20,
             offset_24: this.offset_24,
-            offset_40: this.offset_40,
-            offset_56: this.offset_56,
+            // offset_40: this.offset_40,
+            // offset_56: this.offset_56,
             // offset_60: this.offset_60,
         }
     }

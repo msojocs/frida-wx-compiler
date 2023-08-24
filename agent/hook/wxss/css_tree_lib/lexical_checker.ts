@@ -87,8 +87,8 @@ export const hookLexicalChecker = (baseAddr: BaseAddr) => {
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
                         console.log('[+] a2:', args[0]);
-                        const a2 = args[0]
-                        const t = new CSSSyntaxTree(a2.readPointer()).toJSON()
+                        this.a2 = args[0]
+                        const t = new CSSSyntaxTree(this.a2.readPointer()).toJSON()
                         console.log('a2:', JSON.stringify(t, null, 4))
                         const ctx = this.context as any as Record<string, NativePointer>
                         const ecx = ctx.ecx
@@ -110,6 +110,10 @@ export const hookLexicalChecker = (baseAddr: BaseAddr) => {
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
                     console.log('retval:', retval)
+                    if (this.a2) {
+                        const t = new CSSSyntaxTree(this.a2.readPointer()).toJSON()
+                        console.log('a2:', JSON.stringify(t, null, 4))
+                    }
                     if (this.ecx) {
                         const t = new LexicalChecker(this.ecx).toJSON()
                         console.log('this:', JSON.stringify(t, null, 4))

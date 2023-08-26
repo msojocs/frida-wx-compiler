@@ -114,10 +114,10 @@ export const hookLexicalChecker = (baseAddr: BaseAddr) => {
                         const t = new CSSSyntaxTree(this.a2.readPointer()).toJSON()
                         console.log('a2:', JSON.stringify(t, null, 4))
                     }
-                    if (this.ecx) {
-                        const t = new LexicalChecker(this.ecx).toJSON()
-                        console.log('this:', JSON.stringify(t, null, 4))
-                    }
+                    // if (this.ecx) {
+                    //     const t = new LexicalChecker(this.ecx).toJSON()
+                    //     console.log('this:', JSON.stringify(t, null, 4))
+                    // }
                     console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });

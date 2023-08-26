@@ -20,11 +20,27 @@ export class StdStringStream {
 		this.addr = addr;
 	}
     get start() {
-        return this.addr.add(5 * Process.pointerSize).readPointer()
+        return this.addr.add(20).readPointer()
     }
     get end() {
-        return this.addr.add(6 * Process.pointerSize).readPointer()
+        return this.addr.add(24).readPointer()
     }
+	toJSON() {
+		return {
+			addr: [
+				this.addr.readPointer(),
+				this.addr.add(4).readPointer(),
+				this.addr.add(8).readPointer(),
+				this.addr.add(12).readPointer(),
+				this.addr.add(16).readPointer(),
+				this.addr.add(20).readPointer(),
+			],
+			start: this.start,
+			end: this.end,
+			length: this.end.sub(this.start).toUInt32(),
+			content: this.start.readUtf8String(this.end.sub(this.start).toUInt32()),
+		}
+	}
 	toString() {
 		return this.start.readUtf8String(this.end.sub(this.start).toUInt32());
 	}

@@ -45,7 +45,7 @@ export default class Token {
         return this.addr.add(8).readU32()
     }
     get offset_12() {
-        return this.addr.add(12).readU32()
+        return this.addr.add(12).readInt()
     }
     get offset_16() {
         return this.addr.add(16).readU32()
@@ -69,8 +69,8 @@ export default class Token {
         return {
             // offset_0: this.offset_0,
             // offset_8: this.offset_8,
-            // offset_12: this.offset_12,
-            // offset_16: this.offset_16,
+            offset_12: this.offset_12,
+            offset_16: this.offset_16,
             offset_20: this.offset_20,
             offset_24: this.offset_24,
             // offset_40: this.offset_40,

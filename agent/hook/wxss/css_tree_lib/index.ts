@@ -11,7 +11,7 @@ import { hookRule } from "./rule.js";
 import { hookTransitTable } from "./transit_table.js";
 
 export const hookCSSTreeLib = (baseAddr: BaseAddr) => {
-    hookLexicalChecker(baseAddr)
+    // hookLexicalChecker(baseAddr)
     // hookCSSSyntaxTree(baseAddr)
     // hookParser(baseAddr)
     // hookBase(baseAddr)

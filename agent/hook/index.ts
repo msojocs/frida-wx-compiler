@@ -11,6 +11,6 @@ export const hook = (baseAddr: BaseAddr) => {
     // hookWXML(baseAddr)
     // hookWcc(baseAddr)
     // hookWcsc(baseAddr)
-    hookWXSS(baseAddr)
-    // hookNight(baseAddr)
+    // hookWXSS(baseAddr)
+    hookNight(baseAddr)
 }

@@ -5,11 +5,12 @@ import { stdMapString2StringTemplatingToken, stdVectorStringTemplatingToken } fr
 export const hookStringTemplating = (baseAddr: BaseAddr) => {
 
     {
-        const funcName = 'WXML::StringTemplating::Deal(char const* Str, std::string & a2, std::vector<WXML::StringTemplating::Token> & a3, bool & a4)'
-        const targetAddr = baseAddr.resolveAddress('0x00456999')
+        const funcName = 'WXML::StringTemplating::Deal(char const*,std::string &,std::vector<WXML::StringTemplating::Token> &,bool &)'
+        const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         // ReadFile
         if (targetAddr != null) {
             const arg: Record<string, NativePointer> = {}
+            let i = 0
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -22,16 +23,17 @@ export const hookStringTemplating = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        
-                        console.log(`${funcName} - onEnter`);
+                        i++
+                        this.index = i
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
-                        console.log('[+] Str: ', args[0])
+                        console.log('[+] Str: ', args[0].readCString())
                         console.log('[+] a2: ', new StdString(args[1]).toString()); // This pointer will store the de/encrypted data
                         console.log('[+] a3: ', args[2]);
-                        console.log('[+] a4: ', args[3]);
+                        console.log('[+] a4: ', args[3].readInt());
                         arg.a3 = args[2]
                         
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
@@ -52,10 +54,11 @@ export const hookStringTemplating = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    console.log('retval:', retval)
                     if (arg.a3) {
                         console.log('tokenList:', JSON.stringify(stdVectorStringTemplatingToken(arg.a3), null, 4))
                     }
-                    console.log(`${funcName} - onLeave`);
+                    console.log(`${funcName} - onLeave${this.index}`);
                 }
             });
         }

@@ -3,13 +3,12 @@ import BaseAddr from "../../../hook/utils/addr.js";
 import { stdVectorExprLibToken } from "./class/token.js";
 
 export const hookTokenizer = (baseAddr: BaseAddr) => {
-    let tokenList: NativePointer
     {
         const funcName = 'WXML::EXPRLib::Tokenizer::GetTokens(std::vector<WXML::EXPRLib::Token> &,std::string &)'
         const targetAddr = baseAddr.resolveAddress('0x0042EEC8')
         // ReadFile
         if (targetAddr != null) {
-            const arg: Record<string, NativePointer> = {}
+            let i = 0;
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -22,16 +21,17 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        
-                        console.log(`${funcName} - onEnter`);
+                        i++
+                        this.index = i
+                        if (this.index < 1012) return
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         // console.log('[+] Argv0: ', args[0].readUtf8String())
-                        arg.a2 = args[0]
-                        tokenList = arg.a2
-                        arg.a3 = args[1]
+                        this.a2 = args[0]
+                        this.a3 = args[1]
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -49,10 +49,12 @@ export const hookTokenizer = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    if (arg.a2) {
-                        console.log(JSON.stringify(stdVectorExprLibToken(arg.a2), null, 4))
+                    if (this.index < 1012) return
+                    console.log('retval:', retval)
+                    if (this.a2) {
+                        console.log(JSON.stringify(stdVectorExprLibToken(this.a2), null, 4))
                     }
-                    console.log(`${funcName} - onLeave\n\n`);
+                    console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });
         }

@@ -56,7 +56,7 @@ export const hookBase = (baseAddr: BaseAddr) => {
         const targetAddr = baseAddr.resolveAddress('0x00501CF8')
         // ReadFile
         if (targetAddr != null) {
-            const arg: Record<string, NativePointer> = {}
+            let i = 0
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -69,8 +69,10 @@ export const hookBase = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        
-                        console.log(`${funcName} - onEnter`);
+                        i++
+                        this.index = i
+                        if (this.index < 64400) return
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
@@ -93,7 +95,9 @@ export const hookBase = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    console.log(`${funcName} - onLeave\n\n`);
+                    if (this.index < 64400) return
+                    console.log('retval:', retval)
+                    console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });
         }

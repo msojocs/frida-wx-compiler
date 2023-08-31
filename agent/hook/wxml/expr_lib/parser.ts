@@ -1,14 +1,16 @@
 import { StdString } from "../../../cpp/std_string.js";
 import BaseAddr from "../../../hook/utils/addr.js";
+import ExprParser from "./class/parser.js";
 
 export const hookParser = (baseAddr: BaseAddr) => {
   
     {
-        const funcName = 'WXML::EXPRLib::Parser::Parse(std::string const& a2, std::string const& a3, int a4, int a5, std::string& a6, bool a7)'
-        const targetAddr = baseAddr.resolveAddress('0x0042DAB6')
+        const funcName = 'WXML::EXPRLib::Parser::Parse(std::string const&,std::string const&,int,int,std::string&,bool)'
+        const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         // ReadFile
         if (targetAddr != null) {
             const arg: Record<string, NativePointer> = {}
+            let i = 0;
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -21,10 +23,12 @@ export const hookParser = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        
-                        console.log(`${funcName} - onEnter`);
+                        i++
+                        this.index = i
+                        if (this.index < 1000) return
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
-                        console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] a2: ', new StdString(args[0]).toString());
@@ -39,6 +43,11 @@ export const hookParser = (baseAddr: BaseAddr) => {
                         arg.a5 = args[3]
                         arg.a6 = args[4]
                         arg.a7 = args[5]
+                        const ctx = this.context as any
+                        const ecx = ctx.ecx
+                        this.ecx = ecx
+                        const t = new ExprParser(ecx).toJSON()
+                        console.log(JSON.stringify(t, null, 4))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -56,6 +65,8 @@ export const hookParser = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
+                    if (this.index < 1000) return
+                    console.log('retval:', retval)
                     if (arg.a2) {
                         console.log('a2: ', new StdString(arg.a2).toString())
                     }
@@ -74,7 +85,12 @@ export const hookParser = (baseAddr: BaseAddr) => {
                     if (arg.a7) {
                         console.log('a7: ',arg.a7)
                     }
-                    console.log(`${funcName} - onLeave\n\n`);
+                    if (this.ecx) {
+                        
+                        const t = new ExprParser(this.ecx).toJSON()
+                        console.log(JSON.stringify(t, null, 4))
+                    }
+                    console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });
         }

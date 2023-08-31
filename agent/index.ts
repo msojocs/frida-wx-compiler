@@ -7,7 +7,7 @@ import { hook } from "./hook/index.js"
 import { readMap } from "./utils/map.js"
 
 (() => {
-    const type = 'wcsc'
+    const type = 'wcc'
     const moduleName = type + '-sleep.exe'
     const _baseAddr = Module.findBaseAddress(moduleName);
     if (_baseAddr == null)

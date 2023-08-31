@@ -8,7 +8,7 @@ export const hookNSCompileJs = (baseAddr: BaseAddr) => {
     
     {
         const funcName = 'night::NSCompileJs::compile(night::ns_node *)'
-        const targetAddr = baseAddr.resolveAddress('0x0041995C')
+        const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         if (targetAddr != null) {
             let i = 0
             const arg: Record<string, NativePointer> = {}
@@ -24,8 +24,9 @@ export const hookNSCompileJs = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        console.log(`${funcName} - onEnter${++i}`);
+                        ++i
                         this.index = i
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
@@ -105,10 +106,10 @@ export const hookNSCompileJs = (baseAddr: BaseAddr) => {
     //     }
     // }
     {
-        const funcName = 'night::NSCompileJs::compile_once(std::string & a3, std::vector<std::string> *a4, bool a5)'
-        const targetAddr = baseAddr.resolveAddress('0x0041C7CC')
+        const funcName = 'night::NSCompileJs::compile_once(std::string &,std::vector<std::string> *,bool)'
+        const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         if (targetAddr != null) {
-            const arg: Record<string, NativePointer> = {}
+            let i = 0;
             Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
                 // When function is called, print out its parameters
@@ -121,11 +122,13 @@ export const hookNSCompileJs = (baseAddr: BaseAddr) => {
                 */
                 onEnter: function (args) {
                     try {
-                        console.log(`${funcName} - onEnter`);
+                        i++
+                        this.index = i
+                        console.log(`${funcName} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
-                        arg.a3 = args[1]
+                        this.a3 = args[1]
                         console.log('[+] a3: ', args[1], new StdString(args[1]).toString())
                         console.log('[+] a4: ', args[2], stdVectorStringParse(args[2]));
                         console.log('[+] a5: ', args[3], args[3]);
@@ -147,12 +150,12 @@ export const hookNSCompileJs = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    if (arg.a3) {
-                        console.log('[+] a3: ', new StdString(arg.a3).toString())
+                    if (this.a3) {
+                        console.log('[+] a3: ', new StdString(this.a3).toString())
                     }
                     console.log('retval:', retval)
                     console.log('content:', new StdString(retval).toString())
-                    console.log(`${funcName} - onLeave\n\n`);
+                    console.log(`${funcName} - onLeave${this.index}\n\n`);
                 }
             });
         }

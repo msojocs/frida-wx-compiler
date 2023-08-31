@@ -9,12 +9,12 @@ import { hookTokenizer } from "./tokenizer.js"
 import { hookTransitTable } from "./transit_table.js"
 import { hookTransitTable2 } from "./transit_table/index.js"
 export const hookExprLib = (baseAddr: BaseAddr) => {
-    hookParser(baseAddr)
-    hookExprSyntaxTree(baseAddr)
+    // hookParser(baseAddr)
+    // hookExprSyntaxTree(baseAddr)
     hookTokenizer(baseAddr)
-    hookCommon(baseAddr)
+    // hookCommon(baseAddr)
     // hookToken(baseAddr)
-    // hookTransitTable(baseAddr)
+    hookTransitTable(baseAddr)
     // hookTransitTable2(baseAddr)
     hookBase(baseAddr)
     // hookBNF(baseAddr)

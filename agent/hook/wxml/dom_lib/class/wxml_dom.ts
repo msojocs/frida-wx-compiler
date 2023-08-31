@@ -55,6 +55,12 @@ export default class WxmlDom {
     get offset_140() {
         return this.addr.add(140).readInt()
     }
+    get offset_248() {
+        return [
+            this.addr.add(248).readPointer(),
+            this.addr.add(252).readPointer()
+        ]
+    }
     offset_272() {
         return stdMapString2StringParse(this.addr.add(272))
     }
@@ -65,6 +71,7 @@ export default class WxmlDom {
             offset_48: this.offset_48(),
             offset_72: this.offset_72(),
             offset_140: this.offset_140,
+            offset_248: this.offset_248,
             offset_272: this.offset_272(),
         }
         return result

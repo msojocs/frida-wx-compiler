@@ -2,12 +2,11 @@ import type BaseAddr from "../utils/addr.js";
 import { StdString } from '../../cpp/std_string.js'
 import StdVector, { stdVectorStringParse } from "../../cpp/std_vector.js";
 import StdMap, { stdMapString2IntParse, stdMapString2StringParse, stdMapString2VectorStringParse } from "../../cpp/std_map.js";
-import WXSSToken from "./class/token.js";
 
-export const hookToken = (baseAddr: BaseAddr) => {
-
+export const hookCommon = (baseAddr: BaseAddr) => {
+    
     {
-        const funcName = 'WXSS::Token::GetLiteral(void)'
+        const funcName = 'night::compile_ns(std::string const&,std::string const&,std::string const&,uint,std::string&,bool)'
         const targetAddr = baseAddr.resolveFunctionAddress(funcName)
         // ReadFile
         if (targetAddr != null) {
@@ -26,17 +25,18 @@ export const hookToken = (baseAddr: BaseAddr) => {
                     try {
                         i++
                         this.index = i
-                        this.output = this.index == 719
-                        if (!this.output) return
                         console.log(`${funcName}${this.index} - onEnter`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
+                        // console.log('arg0:', readStdString(args[0]))
+                        console.log('[+] a1: ', new StdString(args[0]).toString())
+                        // console.log('[+] a2: ', new StdString(args[1]).toString());
+                        // console.log('[+] a3: ', new StdString(args[2]).toString());
+                        // arg.a3 = args[2]
+                        this.a5 = args[4]
+                        
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
-                        const ctx = this.context as any as Record<string, NativePointer>
-                        const ecx = ctx.ecx
-                        const _this = new WXSSToken(ecx).toJSON()
-                        console.log('token:', JSON.stringify(_this, null, 4))
                     } catch (error) {
                         console.log('error:', error)
                     }
@@ -53,13 +53,13 @@ export const hookToken = (baseAddr: BaseAddr) => {
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
                     */
-                    if (!this.output) return
                     console.log('retval:', retval)
-                    // console.log(new StdString(retval).toString())
+                    if (this.a5) {
+                        console.log('[+] a5: ', new StdString(this.a5).toString());
+                    }
                     console.log(`${funcName}${this.index} - onLeave\n\n`);
                 }
             });
         }
     }
-    
 }

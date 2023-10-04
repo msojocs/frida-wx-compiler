@@ -8,9 +8,9 @@ import { hookWXSS } from "./wxss/index.js";
 
 export const hook = (baseAddr: BaseAddr) => {
     // hookCPP(baseAddr)
-    // hookWXML(baseAddr)
+    hookWXML(baseAddr)
     // hookWcc(baseAddr)
     // hookWcsc(baseAddr)
     // hookWXSS(baseAddr)
-    hookNight(baseAddr)
+    // hookNight(baseAddr)
 }

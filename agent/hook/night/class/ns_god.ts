@@ -81,7 +81,7 @@ export class GodsSon {
         return {
             type: 'GodsSon',
             offset_0: this.offset_0,
-            offset_24: this.offset_24,
+            // offset_24: this.offset_24,
         }
     }
 }

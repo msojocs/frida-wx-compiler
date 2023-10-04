@@ -32,7 +32,7 @@ export default class NSStream {
         return {
             type: 'NSStream',
             offset_0: this.offset_0,
-            offset_24: this.offset_24,
+            // offset_24: this.offset_24,
             offset_48: this.offset_48,
             offset_52: this.offset_52,
             offset_56: this.offset_56,

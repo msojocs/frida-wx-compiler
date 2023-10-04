@@ -29,13 +29,30 @@ export const hookRPX = (baseAddr: BaseAddr) => {
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
                         // console.log('arg0:', readStdString(args[0]))
                         console.log('[+] a1:', args[0].readInt())
-                        console.log('[+] a2:', args[1])
-                        console.log('[+] a3:', args[2].readInt())
+                        console.log('[+] a2:', args[1].add(2).readUtf8String())
+                        console.log('[+] a3:', args[2].readCString(1))
                         console.log('[+] a4:', args[3].readUtf8String(10))
                         this.a1 = args[0]
                         this.a2 = args[1]
                         this.a3 = args[2]
                         this.a4 = args[3]
+
+                        const accept = args[1].readByteArray(266)
+                        if (accept != null) {
+                            const map: Record<number, string> = {
+                                0x50a082: 'acceptID',
+                                0x0050A074: 'acceptNum',
+                                0x0050A07C: 'acceptStr'
+                            }
+                            console.log(map[args[1].toInt32()])
+                            console.log(accept)
+                            const t = new Uint8Array(accept)
+                            let ret = ''
+                            for(let i=0; i < t.byteLength; i++) {
+                                ret += `0x${t[i].toString(16)},`
+                            }
+                            console.log(ret)
+                        }
                         
                         // console.log('test read:', readStdString(ptr('0x00f7fcf0')))
                     } catch (error) {

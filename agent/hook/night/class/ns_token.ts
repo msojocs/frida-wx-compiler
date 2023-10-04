@@ -50,8 +50,8 @@ export default class NSToken {
     toJSON() {
         return {
             type: 'NSToken',
-            // offset_0: this.offset_0,
-            // offset_4: this.offset_4,
+            offset_0: this.offset_0,
+            offset_4: this.offset_4,
             offset_8: this.offset_8,
             offset_12: this.offset_12,
             offset_24: this.offset_24,

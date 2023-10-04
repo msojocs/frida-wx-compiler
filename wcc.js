@@ -2,8 +2,8 @@ const { spawn, spawnSync, exec, execSync } = require("child_process");
 const fs = require('fs');
 (async () => {
     console.log('start')
-    const wccTask = spawn('d:\\Work\\disassembly\\wcc-exec\\wcc\\wcc-sleep.exe', ["--config-path", "d:/Work/WeChatProjects/miniprogram-1/wcc/99a9bac3c05fc25dd070298212c4a7d3"], {
-        cwd: 'd:/Work/WeChatProjects/miniprogram-1'
+    const wccTask = spawn('d:\\Work\\disassembly\\wcc-exec\\wcc\\wcc-sleep.exe', ["--config-path", "d:/Work/WeChatProjects/case4-cmd.txt"], {
+        cwd: 'd:/Work/WeChatProjects/tdesign-miniprogram-starter-retail'
     })
     wccTask.stdout.on('data', (d) => {
         // console.log(d.toString())

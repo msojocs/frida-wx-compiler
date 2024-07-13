@@ -25,7 +25,9 @@ export const hookStringTemplating = (baseAddr: BaseAddr) => {
                     try {
                         i++
                         this.index = i
-                        console.log(`${funcName} - onEnter${this.index}`);
+                        this.output = this.index === 168
+                        if (!this.output) return
+                        console.log(`${funcName}${this.index} - onEnter${this.index}`);
                         console.log('[+] Called targetAddr:' + targetAddr);
                         // console.log('[+] Ctx: ' + args[-1]);
                         // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
@@ -50,6 +52,7 @@ export const hookStringTemplating = (baseAddr: BaseAddr) => {
 
                 // When function is finished
                 onLeave: function (retval) {
+                    if (!this.output) return
                     /*
                     dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     console.log('[+] Returned from SomeFunc: ' + retval);
@@ -58,7 +61,7 @@ export const hookStringTemplating = (baseAddr: BaseAddr) => {
                     if (arg.a3) {
                         console.log('tokenList:', JSON.stringify(stdVectorStringTemplatingToken(arg.a3), null, 4))
                     }
-                    console.log(`${funcName} - onLeave${this.index}`);
+                    console.log(`${funcName}${this.index} - onLeave${this.index}`);
                 }
             });
         }

@@ -8,9 +8,9 @@ import { hookStringTemplating } from "./string_templating.js";
 
 export const hookWXML = (baseAddr: BaseAddr) => {
     // hookCompiler(baseAddr)
-    // hookDomLib(baseAddr)
-    hookRPX(baseAddr)
+    hookDomLib(baseAddr)
+    // hookRPX(baseAddr)
     // hookCommon(baseAddr)
     // hookExprLib(baseAddr)
-    // hookStringTemplating(baseAddr)
+    hookStringTemplating(baseAddr)
 }

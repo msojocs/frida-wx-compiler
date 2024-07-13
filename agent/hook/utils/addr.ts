@@ -41,7 +41,7 @@ export default class BaseAddr {
             var offset = ptr(`0x${addr}`).sub(idaBase); // Calculate offset in memory from base address in IDA database
             
             result = this.baseAddr.add(offset); // Add current memory base address to offset of function to monitor
-            console.log('[+] New addr=' + result); // Write location of function in memory to console
+            console.log('[+] New addr=' + result, functionName); // Write location of function in memory to console
         } catch (error) {
             console.log('resolveFunctionAddress:', error)
         }

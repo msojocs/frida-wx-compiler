@@ -8,9 +8,9 @@ import { hookNSToken } from "./ns_token.js";
 import { hookStr } from "./str.js";
 export const hookNight = (baseAddr: BaseAddr) => {
     // hookStr(baseAddr)
-    hookNSASTParse(baseAddr)
-    // hookCommon(baseAddr)
-    // hookNSCompileJs(baseAddr)
+    // hookNSASTParse(baseAddr)
+    hookCommon(baseAddr)
+    hookNSCompileJs(baseAddr)
     // hookNSStream(baseAddr)
     // hookNSGod(baseAddr)
     // hookNSToken(baseAddr)

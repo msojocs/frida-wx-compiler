@@ -7,76 +7,77 @@ import WxmlDom from "./class/wxml_dom.js";
 
 export const hookWxmlDom = (baseAddr: BaseAddr) => {
     
-    // {
-    //     const funcName = 'WXML::DOMLib::WXMLDom::DealSingleTokenToOps(std::string const&,std::string&,std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>> &,std::map<std::string,WXML::DOMLib::RVMOpCodePosition> &,WXML::DOMLib::Token *,bool,int,bool,WXML::DOMLib::RVMOpCodePositionRecorder *,bool,std::map const&<std::string,std::string,std::less<std::string>,std::allocator<std::pair<std::string const,std::string>>>)'
-    //     const targetAddr = baseAddr.resolveFunctionAddress(funcName)
-    //     // ReadFile
-    //     if (targetAddr != null) {
-    //         let i = 0
-    //         const arg: any = {
+    {
+        const funcName = 'WXML::DOMLib::WXMLDom::DealSingleTokenToOps(std::string const&,std::string&,std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>> &,std::map<std::string,WXML::DOMLib::RVMOpCodePosition> &,WXML::DOMLib::Token *,bool,int,bool,WXML::DOMLib::RVMOpCodePositionRecorder *,bool,std::map const&<std::string,std::string,std::less<std::string>,std::allocator<std::pair<std::string const,std::string>>>)'
+        const targetAddr = baseAddr.resolveFunctionAddress(funcName)
+        // ReadFile
+        if (targetAddr != null) {
+            let i = 0
+            const arg: any = {
 
-    //         }
-    //         Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
+            }
+            Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
-    //             // When function is called, print out its parameters
-    //             /*
-    //             以下内容演示了
-    //             1. 怎么提取 printf 的第一个参数的字符串
-    //             2. 怎么结合 onLever 做进入函数的时候获取 该函数要操作的内存和长度 ，等函数工作完毕，提取该数据
-    //             其他API 用法
-    //             https://frida.re/docs/javascript-api/
-    //             */
-    //             onEnter: function (args) {
-    //                 try {
-    //                     ++i
-    //                     this.index = i
-    //                     if (this.index != 9) return 
-    //                     console.log(`${funcName} - onEnter${this.index}`);
-    //                     console.log('[+] Called targetAddr:' + targetAddr);
-    //                     // console.log('[+] Ctx: ' + args[-1]);
-    //                     // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
-    //                     console.log('[+] a1: ', new StdString(args[0]).toString())
-    //                     console.log('[+] a2: ', new StdString(args[1]).toString());
-    //                     console.log('[+] a6: ', args[5]);
-    //                     console.log('[+] a7: ', args[6]);
-    //                     console.log('[+] a8: ', args[7]);
-    //                     console.log('[+] a10: ', args[9]);
-    //                     console.log('[+] a11: ', args[10]);
-    //                     const ctx = this.context as any
-    //                     const ecx = ctx.ebx
-    //                     console.log('this wxml data:', JSON.stringify(new WxmlDom(ecx).toJSON(), null, 4))
+                // When function is called, print out its parameters
+                /*
+                以下内容演示了
+                1. 怎么提取 printf 的第一个参数的字符串
+                2. 怎么结合 onLever 做进入函数的时候获取 该函数要操作的内存和长度 ，等函数工作完毕，提取该数据
+                其他API 用法
+                https://frida.re/docs/javascript-api/
+                */
+                onEnter: function (args) {
+                    try {
+                        ++i
+                        this.index = i
+                        this.output = this.index === 168
+                        if (!this.output) return 
+                        console.log(`${funcName} - onEnter${this.index}`);
+                        console.log('[+] Called targetAddr:' + targetAddr);
+                        // console.log('[+] Ctx: ' + args[-1]);
+                        // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
+                        console.log('[+] a1: ', new StdString(args[0]).toString())
+                        console.log('[+] a2: ', new StdString(args[1]).toString());
+                        console.log('[+] a6: ', args[5]);
+                        console.log('[+] a7: ', args[6]);
+                        console.log('[+] a8: ', args[7]);
+                        console.log('[+] a10: ', args[9]);
+                        console.log('[+] a11: ', args[10]);
+                        const ctx = this.context as any
+                        const ecx = ctx.ebx
+                        console.log('this wxml data:', JSON.stringify(new WxmlDom(ecx).toJSON(), null, 4))
                         
-    //                     // arg.arg10 = args[10]
-    //                 } catch (error) {
-    //                     console.log('error:', error)
-    //                 }
+                        // arg.arg10 = args[10]
+                    } catch (error) {
+                        console.log('error:', error)
+                    }
                     
-    //                 /*
-    //                 dumpAddr('Input', args[0], args[3].toInt32());
-    //                 this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
-    //                 this.outsize = args[2].toInt32();
-    //                 */
-    //             },
+                    /*
+                    dumpAddr('Input', args[0], args[3].toInt32());
+                    this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
+                    this.outsize = args[2].toInt32();
+                    */
+                },
 
-    //             // When function is finished
-    //             onLeave: function (retval) {
-    //                 /*
-    //                 dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
+                // When function is finished
+                onLeave: function (retval) {
+                    if (!this.output) return 
+                    /*
+                    dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
                     
-    //                 */
-    //                 // if (arg.arg10) {
-    //                 //     console.log('[+] Argv10: ', stdMapString2StringParse(arg.arg10));
-    //                 // }
-    //                 if (this.index != 9) return 
-    //                 console.log('[+] Return: ', retval);
-    //                 if (arg.ecx) {
-    //                     console.log('wxml data:', JSON.stringify(new WxmlDom(arg.ecx).toJSON(), null, 4))
-    //                 }
-    //                 console.log(`${funcName} - onLeave${this.index}\n\n`);
-    //             }
-    //         });
-    //     }
-    // }
+                    */
+                    // if (arg.arg10) {
+                    //     console.log('[+] Argv10: ', stdMapString2StringParse(arg.arg10));
+                    // }
+                    console.log('[+] Return: ', retval);
+                    if (arg.ecx) {
+                        console.log('wxml data:', JSON.stringify(new WxmlDom(arg.ecx).toJSON(), null, 4))
+                    }
+                    console.log(`${funcName} - onLeave${this.index}\n\n`);
+                }
+            });
+        }
+    }
 
     // {
     //     const funcName = 'WXML::DOMLib::WXMLDom::RenderNonDefine(std::string const&,std::string const&,std::string&,std::string const&,std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>> &,WXML::NameAllocator *,std::string const&,std::string const&,std::string const&,std::string const&,char,bool,uint,std::map<std::string,std::string> *)'
@@ -473,64 +474,64 @@ export const hookWxmlDom = (baseAddr: BaseAddr) => {
     //     }
     // }
 
-    {
-        const funcName = 'WXML::DOMLib::WXMLDom::MarkIfHasDescendant(std::vector<std::string> const&)'
-        const targetAddr = baseAddr.resolveFunctionAddress(funcName)
-        // ReadFile
-        if (targetAddr != null) {
-            let i = 0
-            Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
+    // {
+    //     const funcName = 'WXML::DOMLib::WXMLDom::MarkIfHasDescendant(std::vector<std::string> const&)'
+    //     const targetAddr = baseAddr.resolveFunctionAddress(funcName)
+    //     // ReadFile
+    //     if (targetAddr != null) {
+    //         let i = 0
+    //         Interceptor.attach(targetAddr, { // Intercept calls to our SetAesDecrypt function
 
-                // When function is called, print out its parameters
-                /*
-                以下内容演示了
-                1. 怎么提取 printf 的第一个参数的字符串
-                2. 怎么结合 onLever 做进入函数的时候获取 该函数要操作的内存和长度 ，等函数工作完毕，提取该数据
-                其他API 用法
-                https://frida.re/docs/javascript-api/
-                */
-                onEnter: function (args) {
-                    try {
+    //             // When function is called, print out its parameters
+    //             /*
+    //             以下内容演示了
+    //             1. 怎么提取 printf 的第一个参数的字符串
+    //             2. 怎么结合 onLever 做进入函数的时候获取 该函数要操作的内存和长度 ，等函数工作完毕，提取该数据
+    //             其他API 用法
+    //             https://frida.re/docs/javascript-api/
+    //             */
+    //             onEnter: function (args) {
+    //                 try {
                         
-                        console.log(`${funcName} - onEnter`);
-                        console.log('[+] Called targetAddr:' + targetAddr);
-                        // console.log('[+] Ctx: ' + args[-1]);
-                        // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
-                        // const ctx = this.context as any
-                        // const ecx = ctx.ecx
-                        const a2 = new StdVector(args[0], {
-                            elementSize: 24,
-                            introspectElement: (ptr) => {
-                                return new StdString(ptr).toString()
-                            }
-                        }).toJSON()
-                        console.log('a2:', JSON.stringify(a2, null, 4))
+    //                     console.log(`${funcName} - onEnter`);
+    //                     console.log('[+] Called targetAddr:' + targetAddr);
+    //                     // console.log('[+] Ctx: ' + args[-1]);
+    //                     // console.log('[+] FormatString: ' + Memory.readAnsiString(args[0])); // Plaintext
+    //                     // const ctx = this.context as any
+    //                     // const ecx = ctx.ecx
+    //                     const a2 = new StdVector(args[0], {
+    //                         elementSize: 24,
+    //                         introspectElement: (ptr) => {
+    //                             return new StdString(ptr).toString()
+    //                         }
+    //                     }).toJSON()
+    //                     console.log('a2:', JSON.stringify(a2, null, 4))
 
-                    } catch (error) {
-                        console.log('error:', error)
-                    }
+    //                 } catch (error) {
+    //                     console.log('error:', error)
+    //                 }
                     
-                    /*
-                    dumpAddr('Input', args[0], args[3].toInt32());
-                    this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
-                    this.outsize = args[2].toInt32();
-                    */
-                },
+    //                 /*
+    //                 dumpAddr('Input', args[0], args[3].toInt32());
+    //                 this.outptr = args[1]; // Store arg2 and arg3 in order to see when we leave the function
+    //                 this.outsize = args[2].toInt32();
+    //                 */
+    //             },
 
-                // When function is finished
-                onLeave: function (retval) {
-                    /*
-                    dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
-                    console.log('[+] Returned from SomeFunc: ' + retval);
-                    */
-                    // if (retval.toInt32() > 0) {
-                    //     console.log('retval:', new StdString(retval).toString())
-                    // }
-                    console.log(`${funcName} - onLeave\n\n`);
-                }
-            });
-        }
-    }
+    //             // When function is finished
+    //             onLeave: function (retval) {
+    //                 /*
+    //                 dumpAddr('Output', this.outptr, this.outsize); // Print out data array, which will contain de/encrypted data as output
+    //                 console.log('[+] Returned from SomeFunc: ' + retval);
+    //                 */
+    //                 // if (retval.toInt32() > 0) {
+    //                 //     console.log('retval:', new StdString(retval).toString())
+    //                 // }
+    //                 console.log(`${funcName} - onLeave\n\n`);
+    //             }
+    //         });
+    //     }
+    // }
     // {
     //     const funcName = 'WXML::DOMLib::WXMLDom::ToCamelStyle(std::string const&)	.text	'
     //     const targetAddr = baseAddr.resolveAddress('0x00470E20')
